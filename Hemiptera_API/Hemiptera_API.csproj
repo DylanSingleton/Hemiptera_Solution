@@ -13,7 +13,11 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Data\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hemiptera_Contracts\Hemiptera_Contracts.csproj" />
   </ItemGroup>
 
 </Project>

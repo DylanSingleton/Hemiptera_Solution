@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hemiptera_API", "Hemiptera_API\Hemiptera_API.csproj", "{12460E6E-A431-460B-AE53-6150A6C4A6DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hemiptera_API", "Hemiptera_API\Hemiptera_API.csproj", "{12460E6E-A431-460B-AE53-6150A6C4A6DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hemiptera_Contracts", "Hemiptera_Contracts\Hemiptera_Contracts.csproj", "{E1B02020-4937-4509-9542-7ACCDB5DE3D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hemiptera_Contracts", "Hemiptera_Contracts\Hemiptera_Contracts.csproj", "{E1B02020-4937-4509-9542-7ACCDB5DE3D4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{BB75D3D6-B7DB-4986-890F-F06A8EEB2AF8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0B9D8E8-CDC3-466B-BAB7-2C02473B9751}"
 	ProjectSection(SolutionItems) = preProject
-		Api.md = Api.md
+		Docs\Api.md = Docs\Api.md
 	EndProjectSection
 EndProject
 Global
