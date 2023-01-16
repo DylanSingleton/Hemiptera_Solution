@@ -5,6 +5,13 @@ VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hemiptera_API", "Hemiptera_API\Hemiptera_API.csproj", "{12460E6E-A431-460B-AE53-6150A6C4A6DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hemiptera_Contracts", "Hemiptera_Contracts\Hemiptera_Contracts.csproj", "{E1B02020-4937-4509-9542-7ACCDB5DE3D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{BB75D3D6-B7DB-4986-890F-F06A8EEB2AF8}"
+	ProjectSection(SolutionItems) = preProject
+		Api.md = Api.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +22,10 @@ Global
 		{12460E6E-A431-460B-AE53-6150A6C4A6DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12460E6E-A431-460B-AE53-6150A6C4A6DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12460E6E-A431-460B-AE53-6150A6C4A6DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1B02020-4937-4509-9542-7ACCDB5DE3D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1B02020-4937-4509-9542-7ACCDB5DE3D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1B02020-4937-4509-9542-7ACCDB5DE3D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1B02020-4937-4509-9542-7ACCDB5DE3D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
