@@ -17,7 +17,6 @@ POST /projects
 	"type": "3"
 	}
 ```
-
 ### Status Enumerators
 1. <span style="color:orange">New</span> - This enumerator indicates that a task or project is in its initial stages and has not yet begun.
 2. <span style="color:orange">InProgress</span> - This enumerator indicates that a task or project is currently being worked on and is not yet completed.
@@ -30,7 +29,6 @@ POST /projects
 9. <span style="color:orange">Deployment</span> - This enumerator indicates that a task or project is being deployed for use in a live environment.
 
 ### Type Enumerators
-Copy code
 1. <span style="color:orange">WebApplication</span> - This enumerator indicates that the project is a web-based application.
 2. <span style="color:orange">MobileApplication</span> - This enumerator indicates that the project is a mobile application.
 3. <span style="color:orange">DesktopApplication</span> - This enumerator indicates that the project is a desktop application.

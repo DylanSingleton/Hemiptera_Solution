@@ -1,5 +1,5 @@
 ﻿namespace Hemiptera_Contracts.Project;
-record UpsertProjectRequest(string Name,
+public record UpsertProjectRequest(string Name,
     string Description,
     string? RepositoryLink,
     DateTime StartDateTime,

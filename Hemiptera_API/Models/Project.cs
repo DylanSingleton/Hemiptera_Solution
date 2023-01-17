@@ -1,4 +1,5 @@
 ﻿using Hemiptera_API.Models.Enums;
+using Hemiptera_Contracts.Project;
 
 namespace Hemiptera_API.Models
 {
@@ -7,6 +8,7 @@ namespace Hemiptera_API.Models
         public Guid Id { get;  }
         public string Name { get; }
         public string? Description { get; }
+        public string? RepositoryLink { get; }
         public DateTime StartDatetTime { get; }
         public DateTime? EndDatetTime { get; }
         public ProjectStatus Status { get; }
@@ -16,6 +18,7 @@ namespace Hemiptera_API.Models
             Guid id,
             string name,
             string? description,
+            string? repositoryLink,
             DateTime startDatetTime,
             DateTime? endDatetTime,
             ProjectStatus status,
@@ -24,6 +27,7 @@ namespace Hemiptera_API.Models
             Id = id;
             Name = name;
             Description = description;
+            RepositoryLink = repositoryLink;
             StartDatetTime = startDatetTime;
             EndDatetTime = endDatetTime;
             Status = status;
@@ -31,28 +35,49 @@ namespace Hemiptera_API.Models
         }
 
         public static Project Create(
-            Guid? id,
             string name,
             string? description,
+            string? repositoryLink,
             DateTime startDateTime,
-            DateTime endDateTime,
+            DateTime? endDateTime,
             ProjectStatus status,
-            ProjectType type)
+            ProjectType type,
+            Guid? id = null)
         {
             return new Project(
                 id ?? Guid.NewGuid(),
                 name,
                 description,
+                repositoryLink,
                 startDateTime,
                 endDateTime,
                 status,
                 type);
         }
 
-        public static Project From(CreateBreakfastRequest request)
+        public static Project From(CreateProjectRequest request)
         {
             return Create(
-                req)
+                request.Name,
+                request.Description,
+                request.RepositoryLink,
+                request.StartDateTime,
+                request.EndDateTime,
+                (ProjectStatus)request.Status,
+                (ProjectType)request.Type);
+        }
+
+        public static Project From(Guid id, UpsertProjectRequest request)
+        {
+            return Create(
+                request.Name,
+                request.Description,
+                request.RepositoryLink,
+                request.StartDateTime,
+                request.EndDateTime,
+                (ProjectStatus)request.Status,
+                (ProjectType)request.Type,
+                id);
         }
     }
 }
