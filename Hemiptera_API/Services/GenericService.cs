@@ -1,12 +1,14 @@
 ﻿using Hemiptera_API.Models;
+using Hemiptera_API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Hemiptera_API.Services
 {
     public class GenericService<T> : IGenericService<T> where T : class
     {
-        private readonly ApplicationDbContext? _context;
-        private DbSet<T>? _table;
+        internal ApplicationDbContext _context;
+        internal DbSet<T>? _table = null;
 
         public GenericService(ApplicationDbContext context)
         {
@@ -33,11 +35,6 @@ namespace Hemiptera_API.Services
         public void Insert(T obj)
         {
             _table.Add(obj);
-        }
-
-        public void Save()
-        {
-            _context.SaveChanges();
         }
 
         public void Upsert(T obj)

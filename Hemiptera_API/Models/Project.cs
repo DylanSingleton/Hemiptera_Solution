@@ -1,5 +1,5 @@
 ﻿using Hemiptera_API.Models.Enums;
-using Hemiptera_Contracts.Project;
+using Hemiptera_Contracts.Project.Requests;
 
 namespace Hemiptera_API.Models
 {

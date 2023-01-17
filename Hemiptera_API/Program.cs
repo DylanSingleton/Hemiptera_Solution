@@ -1,5 +1,6 @@
 using Hemiptera_API.Models;
 using Hemiptera_API.Services;
+using Hemiptera_API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,20 +12,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ApplicationDbContext>(
-    (sp, options) =>
-    {
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (builder.Environment.IsDevelopment())
+{
+    DbContextSettings.ConnectionString = builder.Configuration.GetConnectionString("DeveloperConnection")!;
+}
+else
+{
+    DbContextSettings.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+}
 
-        // Services for AuditableEntitySaveChangesInterceptor
-       // var dateTimeService = sp.GetService<IDateTimeService>()!;
-       // var userIdentifierService = sp.GetService<IUserIdentifierService>()!;
+builder.Services.AddDbContext<ApplicationDbContext>();
 
-       // options.AddInterceptors(new AuditableEntitySaveChangesInterceptor(dateTimeService, userIdentifierService));
-        options.UseSqlServer(connectionString);
-    });
+builder.Services.AddTransient(typeof(IGenericService<>), typeof(GenericService<>));
+builder.Services.AddTransient<IProjectService, ProjectService>();
+builder.Services.AddTransient<IUnitOfWorkService, UnitOfWorkService>();
 
-builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 
 var app = builder.Build();
 

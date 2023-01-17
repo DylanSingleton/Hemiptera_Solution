@@ -1,4 +1,4 @@
-﻿namespace Hemiptera_Contracts.Project;
+﻿namespace Hemiptera_Contracts.Project.Responses;
 public record ProjectResponse(
     string Name,
     string Description,

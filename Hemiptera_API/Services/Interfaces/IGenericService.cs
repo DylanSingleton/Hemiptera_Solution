@@ -1,4 +1,4 @@
-﻿namespace Hemiptera_API.Services
+﻿namespace Hemiptera_API.Services.Interfaces
 {
     public interface IGenericService<T> where T : class
     {
@@ -7,6 +7,5 @@
         void Insert(T obj);
         void Upsert(T obj);
         void Delete(object id);
-        void Save();
     }
 }
