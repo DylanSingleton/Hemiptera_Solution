@@ -6,13 +6,13 @@ namespace Hemiptera_API.Services
     public class UnitOfWorkService : IUnitOfWorkService
     {
         private readonly ApplicationDbContext _context;
-        public IProjectService ProjectService { get; }
+        public IProjectService Project { get; }
 
         public UnitOfWorkService(ApplicationDbContext context,
             IProjectService projectService)
         {
             _context = context;
-            ProjectService = projectService;
+            Project = projectService;
         }
 
         private bool _disposed;

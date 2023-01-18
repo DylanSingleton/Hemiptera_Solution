@@ -2,7 +2,7 @@
 {
     public interface IUnitOfWorkService : IDisposable
     {
-        IProjectService ProjectService { get;}
+        IProjectService Project { get;}
         void Save();
     }
 }

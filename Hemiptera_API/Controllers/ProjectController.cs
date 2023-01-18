@@ -23,7 +23,7 @@ namespace Hemiptera_API.Controllers
         [HttpGet("{id:guid}")]
         public IActionResult GetProject(Guid id)
         {
-            var getProjectResult = _unitOfWork.ProjectService.GetById(id);
+            var getProjectResult = _unitOfWork.Project.GetById(id);
 
             if(getProjectResult.IsFailure)
             {
@@ -36,14 +36,14 @@ namespace Hemiptera_API.Controllers
         [HttpGet("GetAll")]
         public IActionResult GetProjects()
         {
-            var getProjectResult = _unitOfWork.ProjectService.GetAll();
+            var getProjectResult = _unitOfWork.Project.GetAll();
 
             if (getProjectResult.IsFailure)
             {
                 return NotFound(getProjectResult.Errors);
             }
 
-            var response = MapProjectResponse(getProjectResult.Payload!);
+            var response = MapProjectResponse(getProjectResult.Payloads.ToList());
             return Ok(response);
         }
 
@@ -57,7 +57,7 @@ namespace Hemiptera_API.Controllers
             {
                 Project requestToProjectResult = Project.From(request);
 
-                _unitOfWork.ProjectService.Insert(requestToProjectResult);
+                _unitOfWork.Project.Insert(requestToProjectResult);
 
                 _unitOfWork.Save();
                 return GetProjectCreatedAt(requestToProjectResult);
@@ -68,10 +68,23 @@ namespace Hemiptera_API.Controllers
             }
         }
 
+        [HttpPut("Update/{id:guid}")]
+        public IActionResult UpdateProject(Guid id, UpsertProjectRequest request)
+        {
+            var result = _unitOfWork.Project.Update(Project.From(id, request));
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(result);
+        }
+
         [HttpDelete("Delete/{id:guid}")]
         public IActionResult DeleteProject(Guid id)
         {
-            var deleteProjectResult = _unitOfWork.ProjectService.Delete(id);
+            var deleteProjectResult = _unitOfWork.Project.Delete(id);
 
             if (deleteProjectResult.IsFailure)
             {

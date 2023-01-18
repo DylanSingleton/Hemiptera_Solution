@@ -4,8 +4,8 @@
     {
         ServiceResultWithPayloads<T> GetAll();
         ServiceResultWithPayload<T> GetById(object id);
-        ServiceResult Insert(T obj);
-        ServiceResult Upsert(T obj);
+        ServiceResultWithPayload<T> Insert(T obj);
+        ServiceResultWithPayload<T> Update(T obj);
         ServiceResult Delete(object id);
     }
 }

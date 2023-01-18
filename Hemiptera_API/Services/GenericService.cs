@@ -19,22 +19,19 @@ namespace Hemiptera_API.Services
 
         public ServiceResult Delete(object id)
         {
-            ServiceResult result = new ServiceResult();
-
-            if(_table is null)
+            if (_table is null)
             {
                 throw new InvalidOperationException();
             }
 
             T entity = _table.Find(id)!;
 
-            if(entity is null)
+            if (entity is null)
             {
-                result.IsFailure = true;
-                result.Errors.Add(new ServiceError($"Entity with the ID : {id} not found."));
+                return new ServiceResult(new ServiceError($"Entity to delete with the ID : {id} not found."));
             }
-                _table.Remove(entity!);
-                return result;
+            _table.Remove(entity!);
+            return new ServiceResult(false);
         }
 
         public ServiceResultWithPayloads<T> GetAll()
@@ -46,16 +43,9 @@ namespace Hemiptera_API.Services
 
             var getResult = _table.ToList();
 
-            if(getResult.Any())
-            {
-                return new ServiceResultWithPayloads<T>(
-                    getResult,
-                    false);
-            }
-
-            return new ServiceResultWithPayloads<T>(
-                new ServiceError($"{typeof(T).Name} contains no records."),
-                true);
+            return getResult.Any()
+              ? new ServiceResultWithPayloads<T>(getResult, false)
+              : new ServiceResultWithPayloads<T>(new ServiceError($"{typeof(T).Name} contains no records."));
         }
 
         public ServiceResultWithPayload<T> GetById(object id)
@@ -67,38 +57,38 @@ namespace Hemiptera_API.Services
 
             var entity = _table.Find(id);
 
-            if(entity is not null)
-            {
-                return new ServiceResultWithPayload<T>(entity, false);
-            }
-
-            return new ServiceResultWithPayload<T>(
-                new ServiceError($"{typeof(T).Name} with the ID : {id} not found."),
-                true);
+            return entity != null
+                 ? new ServiceResultWithPayload<T>(entity, false)
+                 : new ServiceResultWithPayload<T>(new ServiceError($"{typeof(T).Name} with the ID : {id} not found."));
         }
 
-        public ServiceResult Insert(T obj)
+        public ServiceResultWithPayload<T> Insert(T obj)
         {
-            ServiceResult result = new();
-
             if (_table is null)
             {
-                result.IsFailure = true;
                 throw new InvalidOperationException();
             }
-
+            if (_table.Contains(obj))
+            {
+                return new ServiceResultWithPayload<T>(new ServiceError($"{typeof(T).Name} already exists."));
+            }
             _table.Add(obj);
-            return result;
+            return new ServiceResultWithPayload<T>(obj);
         }
 
-        public ServiceResult Upsert(T obj)
+        public ServiceResultWithPayload<T> Update(T obj)
         {
-            ServiceResult result = new();
-
+            if (_table is null)
+            {
+                throw new InvalidOperationException();
+            }
+            if (!_table.Contains(obj))
+            {
+                return new ServiceResultWithPayload<T>(new ServiceError($"{typeof(T).Name} not found."));
+            }
             _table.Attach(obj);
             _context.Entry(obj).State = EntityState.Modified;
-
-            return result;
+            return new ServiceResultWithPayload<T>(obj);
         }
     }
 }

@@ -5,16 +5,20 @@ namespace Hemiptera_API.Services
     public class ServiceResultWithPayload<T> : ServiceResult
     {
         public T? Payload { get; set; }
-        public ServiceResultWithPayload(T payload, bool isFailure)
+        public ServiceResultWithPayload(T payload)
+            : this(payload, false)
         {
-            Payload = payload;
-            IsFailure = isFailure;
         }
 
-        public ServiceResultWithPayload(ServiceError serviceError, bool isFailure)
+        public ServiceResultWithPayload(T payload, bool isFailure)
+            : base(isFailure)
         {
-            Errors!.Add(serviceError);
-            IsFailure = isFailure;
+            Payload = payload;
+        }
+
+        public ServiceResultWithPayload(ServiceError serviceError)
+            : base(serviceError)
+        {
         }
     }
 }
