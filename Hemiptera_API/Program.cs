@@ -1,3 +1,4 @@
+using Hemiptera_API.Extensions;
 using Hemiptera_API.Models;
 using Hemiptera_API.Services;
 using Hemiptera_API.Services.Interfaces;

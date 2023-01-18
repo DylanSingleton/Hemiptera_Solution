@@ -1,4 +1,5 @@
 ﻿using Hemiptera_API.Models.Enums;
+using Hemiptera_API.Services;
 using Hemiptera_Contracts.Project.Requests;
 
 namespace Hemiptera_API.Models
@@ -34,7 +35,7 @@ namespace Hemiptera_API.Models
             Type = type;
         }
 
-        public static Project Create(
+        private static Project Create(
             string name,
             string? description,
             string? repositoryLink,

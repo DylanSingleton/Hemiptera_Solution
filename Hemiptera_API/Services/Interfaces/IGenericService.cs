@@ -2,10 +2,10 @@
 {
     public interface IGenericService<T> where T : class
     {
-        IEnumerable<T> GetAll();
-        T GetById(object id);
-        void Insert(T obj);
-        void Upsert(T obj);
-        void Delete(object id);
+        ServiceResultWithPayloads<T> GetAll();
+        ServiceResultWithPayload<T> GetById(object id);
+        ServiceResult Insert(T obj);
+        ServiceResult Upsert(T obj);
+        ServiceResult Delete(object id);
     }
 }

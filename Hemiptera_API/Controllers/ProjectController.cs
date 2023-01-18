@@ -24,7 +24,26 @@ namespace Hemiptera_API.Controllers
         public IActionResult GetProject(Guid id)
         {
             var getProjectResult = _unitOfWork.ProjectService.GetById(id);
-            var response = MapProjectResponse(getProjectResult);
+
+            if(getProjectResult.IsFailure)
+            {
+                return NotFound(getProjectResult.Errors);
+            }
+            var response = MapProjectResponse(getProjectResult.Payload!);
+            return Ok(response);
+        }
+
+        [HttpGet("GetAll")]
+        public IActionResult GetProjects()
+        {
+            var getProjectResult = _unitOfWork.ProjectService.GetAll();
+
+            if (getProjectResult.IsFailure)
+            {
+                return NotFound(getProjectResult.Errors);
+            }
+
+            var response = MapProjectResponse(getProjectResult.Payload!);
             return Ok(response);
         }
 
@@ -49,6 +68,20 @@ namespace Hemiptera_API.Controllers
             }
         }
 
+        [HttpDelete("Delete/{id:guid}")]
+        public IActionResult DeleteProject(Guid id)
+        {
+            var deleteProjectResult = _unitOfWork.ProjectService.Delete(id);
+
+            if (deleteProjectResult.IsFailure)
+            {
+                return NotFound(deleteProjectResult.Errors);
+            }
+
+            _unitOfWork.Save();
+            return Ok();
+        }
+
         private static ProjectResponse MapProjectResponse(Project project)
         {
             return new ProjectResponse(
@@ -59,6 +92,13 @@ namespace Hemiptera_API.Controllers
                 project.EndDatetTime,
                 EnumDisplayExtensions.GetProjectStatusDisplayString(project.Status),
                 EnumDisplayExtensions.GetProjectTypeDisplayString(project.Type));
+        }
+
+        private static List<ProjectResponse> MapProjectResponse(List<Project> projects)
+        {
+            var list = new List<ProjectResponse>();
+            projects.ForEach(x => list.Add(MapProjectResponse(x)));
+            return list;
         }
 
         private CreatedAtActionResult GetProjectCreatedAt(Project project)

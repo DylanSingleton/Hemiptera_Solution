@@ -1,4 +1,5 @@
 ﻿using Hemiptera_API.Models;
+using Hemiptera_API.ServiceErrors;
 using Hemiptera_API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -16,31 +17,88 @@ namespace Hemiptera_API.Services
             _table = _context.Set<T>();
         }
 
-        public void Delete(object id)
+        public ServiceResult Delete(object id)
         {
-            T entity = _table.Find(id);
-            _table.Remove(entity);
+            ServiceResult result = new ServiceResult();
+
+            if(_table is null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            T entity = _table.Find(id)!;
+
+            if(entity is null)
+            {
+                result.IsFailure = true;
+                result.Errors.Add(new ServiceError($"Entity with the ID : {id} not found."));
+            }
+                _table.Remove(entity!);
+                return result;
         }
 
-        public IEnumerable<T> GetAll()
+        public ServiceResultWithPayloads<T> GetAll()
         {
-            return _table.ToList();
+            if(_table is null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var getResult = _table.ToList();
+
+            if(getResult.Any())
+            {
+                return new ServiceResultWithPayloads<T>(
+                    getResult,
+                    false);
+            }
+
+            return new ServiceResultWithPayloads<T>(
+                new ServiceError($"{typeof(T).Name} contains no records."),
+                true);
         }
 
-        public T GetById(object id)
+        public ServiceResultWithPayload<T> GetById(object id)
         {
-            return _table.Find(id);
+            if(_table is null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var entity = _table.Find(id);
+
+            if(entity is not null)
+            {
+                return new ServiceResultWithPayload<T>(entity, false);
+            }
+
+            return new ServiceResultWithPayload<T>(
+                new ServiceError($"{typeof(T).Name} with the ID : {id} not found."),
+                true);
         }
 
-        public void Insert(T obj)
+        public ServiceResult Insert(T obj)
         {
+            ServiceResult result = new();
+
+            if (_table is null)
+            {
+                result.IsFailure = true;
+                throw new InvalidOperationException();
+            }
+
             _table.Add(obj);
+            return result;
         }
 
-        public void Upsert(T obj)
+        public ServiceResult Upsert(T obj)
         {
+            ServiceResult result = new();
+
             _table.Attach(obj);
-            _context.Entry(obj).State= EntityState.Modified;
+            _context.Entry(obj).State = EntityState.Modified;
+
+            return result;
         }
     }
 }
