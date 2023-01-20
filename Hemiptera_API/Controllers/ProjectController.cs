@@ -1,23 +1,20 @@
 ﻿using Hemiptera_API.Extensions;
 using Hemiptera_API.Models;
-using Hemiptera_API.Models.Enums;
-using Hemiptera_API.Services;
 using Hemiptera_API.Services.Interfaces;
 using Hemiptera_Contracts.Project.Requests;
 using Hemiptera_Contracts.Project.Responses;
 using Hemiptera_Contracts.Project.Validator;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Extensions;
 
 namespace Hemiptera_API.Controllers
 {
-
     public class ProjectController : ControllerBase
     {
         private IUnitOfWorkService _unitOfWork;
+
         public ProjectController(IUnitOfWorkService unitOfWorkService)
         {
-            _unitOfWork= unitOfWorkService;
+            _unitOfWork = unitOfWorkService;
         }
 
         [HttpGet("{id:guid}")]
@@ -25,7 +22,7 @@ namespace Hemiptera_API.Controllers
         {
             var getProjectResult = _unitOfWork.Project.GetById(id);
 
-            if(getProjectResult.IsFailure)
+            if (getProjectResult.IsFailure)
             {
                 return NotFound(getProjectResult.Errors);
             }
@@ -50,14 +47,19 @@ namespace Hemiptera_API.Controllers
         [HttpPost("Create")]
         public IActionResult CreateProject(CreateProjectRequest request)
         {
+            // RETURN ALREADY EXISTING ERROR
             var validator = new CreateProjectValidator();
 
             var validationResult = validator.Validate(request);
-            if(validationResult.IsValid)
+            if (validationResult.IsValid)
             {
                 Project requestToProjectResult = Project.From(request);
 
-                _unitOfWork.Project.Insert(requestToProjectResult);
+                var createProjectResult = _unitOfWork.Project.Insert(requestToProjectResult);
+                if (createProjectResult.IsFailure)
+                {
+                    return UnprocessableEntity(createProjectResult.Errors);
+                }
 
                 _unitOfWork.Save();
                 return GetProjectCreatedAt(requestToProjectResult);
@@ -69,16 +71,22 @@ namespace Hemiptera_API.Controllers
         }
 
         [HttpPut("Update/{id:guid}")]
-        public IActionResult UpdateProject(Guid id, UpsertProjectRequest request)
+        public IActionResult UpdateProject(Guid id, UpdateProjectRequest request)
         {
-            var result = _unitOfWork.Project.Update(Project.From(id, request));
+            var validator = new UpdateProjectValidator();
+            var validationResult = validator.Validate(request);
 
-            if (result.IsFailure)
+            if (!validationResult.IsValid)
             {
-                return BadRequest(result.Errors);
+                return BadRequest(validationResult.Errors);
             }
 
-            return Ok(result);
+            var updateProjectResult = _unitOfWork.Project.Update(Project.From(id, request));
+            if (updateProjectResult.IsFailure)
+            {
+                return NotFound(updateProjectResult.Errors);
+            }
+            return Ok(updateProjectResult);
         }
 
         [HttpDelete("Delete/{id:guid}")]
@@ -109,16 +117,14 @@ namespace Hemiptera_API.Controllers
 
         private static List<ProjectResponse> MapProjectResponse(List<Project> projects)
         {
-            var list = new List<ProjectResponse>();
-            projects.ForEach(x => list.Add(MapProjectResponse(x)));
-            return list;
+            return projects.ConvertAll(MapProjectResponse);
         }
 
         private CreatedAtActionResult GetProjectCreatedAt(Project project)
         {
             return CreatedAtAction(
                 actionName: nameof(GetProject),
-                routeValues: new { id = project.Id},
+                routeValues: new { id = project.Id },
                 value: MapProjectResponse(project));
         }
     }

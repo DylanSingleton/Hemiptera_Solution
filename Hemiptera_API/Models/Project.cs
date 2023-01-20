@@ -68,7 +68,7 @@ namespace Hemiptera_API.Models
                 (ProjectType)request.Type);
         }
 
-        public static Project From(Guid id, UpsertProjectRequest request)
+        public static Project From(Guid id, UpdateProjectRequest request)
         {
             return Create(
                 request.Name,
