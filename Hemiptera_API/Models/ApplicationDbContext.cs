@@ -1,12 +1,13 @@
 ﻿using Hemiptera_API.Models.Mapping;
 using Hemiptera_API.Settings;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 
 namespace Hemiptera_API.Models
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     {
         DbSet<Project> Projects { get; set; }
 

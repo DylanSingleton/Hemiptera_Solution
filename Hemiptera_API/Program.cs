@@ -3,7 +3,10 @@ using Hemiptera_API.Services;
 using Hemiptera_API.Services.Interfaces;
 using Hemiptera_API.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -79,6 +82,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddDbContext<ApplicationDbContext>();
+
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddTransient(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddTransient<IProjectService, ProjectService>();
