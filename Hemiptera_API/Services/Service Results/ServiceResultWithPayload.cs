@@ -1,4 +1,5 @@
 ﻿using Hemiptera_API.ServiceErrors;
+using System.Net;
 
 namespace Hemiptera_API.Services
 {

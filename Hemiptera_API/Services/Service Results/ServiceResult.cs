@@ -5,23 +5,23 @@ namespace Hemiptera_API.Services
 {
     public class ServiceResult
     {
-        public bool IsFailure { get; }
-        public ICollection<ServiceError> Errors { get; }
+        public bool IsSuccessful { get; }
+        public ServiceError? Error { get; }
+
         public ServiceResult()
             : this(false)
         {
 
         }
-        public ServiceResult(bool isFailure)
+        public ServiceResult(bool isSuccessful)
         {
-            IsFailure = isFailure;
-            Errors = new List<ServiceError>();
+            IsSuccessful = isSuccessful;
         }
 
         public ServiceResult(ServiceError serviceError)
-            : this(true) 
+            : this(false) 
         {
-            Errors.Add(serviceError);
+            Error = serviceError;
         }
     }
 }

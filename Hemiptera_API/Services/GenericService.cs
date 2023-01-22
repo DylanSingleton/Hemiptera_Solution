@@ -34,7 +34,7 @@ namespace Hemiptera_API.Services
                     id.ToString()!));
             }
             _table.Remove(entity);
-            return new ServiceResult(false);
+            return new ServiceResult(true);
         }
 
         public ServiceResultWithPayloads<T> GetAll()
@@ -47,7 +47,7 @@ namespace Hemiptera_API.Services
             var getResult = _table.ToList();
 
             return getResult.Any()
-              ? new ServiceResultWithPayloads<T>(getResult, false)
+              ? new ServiceResultWithPayloads<T>(getResult, true)
               : new ServiceResultWithPayloads<T>(new NotFoundServiceError(typeof(T).Name));
         }
 
@@ -61,10 +61,9 @@ namespace Hemiptera_API.Services
             var entity = _table.Find(id);
 
             return entity != null
-                 ? new ServiceResultWithPayload<T>(entity, false)
-                 : new ServiceResultWithPayload<T>(new NotFoundServiceError(
-                    typeof(T).Name,
-                    id.ToString()!));
+                 ? new ServiceResultWithPayload<T>(entity, true)
+                 : new ServiceResultWithPayload<T>(
+                     new NotFoundServiceError(typeof(T).Name, id.ToString()));
         }
 
         public ServiceResultWithPayload<T> Insert(T obj)
@@ -75,13 +74,12 @@ namespace Hemiptera_API.Services
             }
             if (_table.Contains(obj))
             {
-                var id = _context.Entry(obj).Property("Id").CurrentValue;
-                return new ServiceResultWithPayload<T>(new AlreadyExistsServiceError(
-                    typeof(T).Name,
-                    id.ToString()!));
+                var id = _context.Entry(obj).Property("Id").CurrentValue!.ToString()!;
+                return new ServiceResultWithPayload<T>(
+                    new AlreadyExistsServiceError(typeof(T).Name, id));
             }
             _table.Add(obj);
-            return new ServiceResultWithPayload<T>(obj);
+            return new ServiceResultWithPayload<T>(obj, true);
         }
 
         public ServiceResultWithPayload<T> Update(T obj)
@@ -92,14 +90,13 @@ namespace Hemiptera_API.Services
             }
             if (!_table.Contains(obj))
             {
-                var id = _context.Entry(obj).Property("Id").CurrentValue;
-                return new ServiceResultWithPayload<T>(new NotFoundServiceError(
-                    typeof(T).Name,
-                    id.ToString()!));
+                var id = _context.Entry(obj).Property("Id").CurrentValue!.ToString()!;
+                return new ServiceResultWithPayload<T>(
+                    new NotFoundServiceError(typeof(T).Name, id));
             }
             _table.Attach(obj);
             _context.Entry(obj).State = EntityState.Modified;
-            return new ServiceResultWithPayload<T>(obj);
+            return new ServiceResultWithPayload<T>(obj, true);
         }
     }
 }
