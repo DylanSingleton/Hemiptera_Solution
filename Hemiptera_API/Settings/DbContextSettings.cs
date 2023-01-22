@@ -1,4 +1,4 @@
-﻿namespace Hemiptera_API.Models
+﻿namespace Hemiptera_API.Settings
 {
     public class DbContextSettings
     {

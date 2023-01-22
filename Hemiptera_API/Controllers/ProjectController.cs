@@ -4,6 +4,7 @@ using Hemiptera_API.Services.Interfaces;
 using Hemiptera_Contracts.Project.Requests;
 using Hemiptera_Contracts.Project.Responses;
 using Hemiptera_Contracts.Project.Validator;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hemiptera_API.Controllers

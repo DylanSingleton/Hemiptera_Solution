@@ -1,4 +1,5 @@
 ﻿using Hemiptera_API.Models.Mapping;
+using Hemiptera_API.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
