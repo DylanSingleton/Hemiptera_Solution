@@ -11,8 +11,8 @@ namespace Hemiptera_API.Services
         {
         }
 
-        public ServiceResultWithPayload(T payload, bool isFailure)
-            : base(isFailure)
+        public ServiceResultWithPayload(T payload, bool IsSuccessful)
+            : base(IsSuccessful)
         {
             Payload = payload;
         }

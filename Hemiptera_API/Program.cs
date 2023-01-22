@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Version = "v1",
         Title = "Hemiptera",
-        Description = "Hemiptera WebAPI"
+        Description = "Hemiptera Web API"
     });
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -83,6 +83,8 @@ builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddTransient(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddTransient<IProjectService, ProjectService>();
 builder.Services.AddTransient<IUnitOfWorkService, UnitOfWorkService>();
+builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
+
 
 var app = builder.Build();
 

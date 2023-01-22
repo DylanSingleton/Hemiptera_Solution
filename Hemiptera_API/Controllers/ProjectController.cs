@@ -25,8 +25,7 @@ namespace Hemiptera_API.Controllers
 
             if (getProjectResult.IsSuccessful)
             {
-                var response = MapProjectResponse(getProjectResult.Payload!);
-                return Ok(response);
+                return Ok(MapProjectResponse(getProjectResult.Payload!));
             }
 
             return new ObjectResult(getProjectResult.Error)
@@ -40,9 +39,7 @@ namespace Hemiptera_API.Controllers
 
             if (getProjectResult.IsSuccessful)
             {
-                var response = MapProjectResponse(getProjectResult.Payloads!.ToList());
-                return Ok(response);
-
+                return Ok(MapProjectResponse(getProjectResult.Payloads!.ToList()));
             }
             return new ObjectResult(getProjectResult.Error)
             { StatusCode = (int)getProjectResult.Error!.HttpStatusCode };
@@ -118,8 +115,8 @@ namespace Hemiptera_API.Controllers
                 project.RepositoryLink ?? string.Empty,
                 project.StartDatetTime,
                 project.EndDatetTime,
-                EnumDisplayExtensions.GetProjectStatusDisplayString(project.Status),
-                EnumDisplayExtensions.GetProjectTypeDisplayString(project.Type));
+                project.Status.DisplayString(),
+                project.Type.DisplayString());
         }
 
         private static List<ProjectResponse> MapProjectResponse(List<Project> projects)

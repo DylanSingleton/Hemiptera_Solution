@@ -14,5 +14,6 @@ namespace Hemiptera_API.Settings
         public static string Issuer { get; set; } = string.Empty;
         public static string Audience { get; set; } = string.Empty;
         public static SecurityKey IssuerSigningKey;
+        public static int Lifetime = 15;
     }
 }
