@@ -5,7 +5,7 @@ namespace Hemiptera_API.Services.Interfaces
 {
     public interface IAuthenticationService
     {
-        ServiceResultWithPayload<AuthenticationResponse> Login(LoginRequest request);
-        ServiceResultWithPayload<AuthenticationResponse> Register(LoginRequest request);
+        Task<ServiceResultWithPayload<AuthenticationResponse>> LoginAsync(LoginRequest request);
+        Task<ServiceResultWithPayload<AuthenticationResponse>> Register(RegisterRequest request);
     }
 }

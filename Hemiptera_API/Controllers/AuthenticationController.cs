@@ -15,30 +15,40 @@ namespace Hemiptera_API.Controllers
         }
 
         [HttpPost("Login")]
-        public IActionResult Login(LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
             var validator = new LoginRequestValidator();
             var validationResult = validator.Validate(request);
             if (validationResult.IsValid)
             {
-                var getAuthResult = _authenticationService.Login(request);
+                var getAuthResult = await _authenticationService.LoginAsync(request);
                 if (getAuthResult.IsSuccessful)
                 {
                     return Ok(getAuthResult.Payload);
                 }
+
+                return new ObjectResult(getAuthResult.Error)
+                { StatusCode = (int)getAuthResult.Error!.HttpStatusCode };
             }
             return BadRequest(validationResult.Errors);
         }
 
         [HttpPost("Register")]
-        public IActionResult Register(RegisterRequest request)
+        public async Task<IActionResult> Register(RegisterRequest request)
         {
             var validator = new RegisterRequestValidator();
 
             var validationResult = validator.Validate(request);
             if (validationResult.IsValid)
             {
-                return Ok(validationResult);
+                var getAuthResult = await _authenticationService.Register(request);
+                if (getAuthResult.IsSuccessful)
+                {
+                    return Ok(getAuthResult.Payload);
+                }
+
+                return new ObjectResult(getAuthResult.Error)
+                { StatusCode = (int)getAuthResult.Error!.HttpStatusCode };
             }
             return BadRequest(validationResult.Errors);
         }
