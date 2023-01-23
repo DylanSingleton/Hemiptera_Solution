@@ -3,9 +3,9 @@ using Hemiptera_API.Services.Interfaces;
 
 namespace Hemiptera_API.Services
 {
-    public class ProjectService : GenericService<Project>, IProjectService
+    public class ProjectRepository : GenericRepository<Project>, IProjectRepository
     {
-        public ProjectService(ApplicationDbContext context): base(context) { }
+        public ProjectRepository(ApplicationDbContext context): base(context) { }
 
         public IEnumerable<Project> GetAllProjectsByType()
         {

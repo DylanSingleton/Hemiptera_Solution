@@ -2,7 +2,7 @@
 
 namespace Hemiptera_API.Services.Interfaces
 {
-    public interface IProjectService : IGenericService<Project>
+    public interface IProjectRepository : IGenericRepository<Project>
     {
         IEnumerable<Project> GetAllProjectsByType();
     }

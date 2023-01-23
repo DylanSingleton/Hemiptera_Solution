@@ -7,9 +7,9 @@ namespace Hemiptera_API.Controllers
 {
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
 
-        public AuthenticationController(IAuthenticationService authenticationService)
+        public AuthenticationController(IAuthenticationRepository authenticationService)
         {
             _authenticationService = authenticationService;
         }

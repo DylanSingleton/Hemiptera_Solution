@@ -7,12 +7,12 @@ using Microsoft.Extensions.Options;
 
 namespace Hemiptera_API.Services
 {
-    public class GenericService<T> : IGenericService<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         internal ApplicationDbContext _context;
         internal DbSet<T>? _table = null;
 
-        public GenericService(ApplicationDbContext context)
+        public GenericRepository(ApplicationDbContext context)
         {
             _context = context;
             _table = _context.Set<T>();

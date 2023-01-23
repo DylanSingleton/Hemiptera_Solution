@@ -11,9 +11,9 @@ namespace Hemiptera_API.Controllers
 {
     public class ProjectController : ControllerBase
     {
-        private IUnitOfWorkService _unitOfWork;
+        private IUnitOfWorkRepository _unitOfWork;
 
-        public ProjectController(IUnitOfWorkService unitOfWorkService)
+        public ProjectController(IUnitOfWorkRepository unitOfWorkService)
         {
             _unitOfWork = unitOfWorkService;
         }

@@ -3,13 +3,13 @@ using Hemiptera_API.Services.Interfaces;
 
 namespace Hemiptera_API.Services
 {
-    public class UnitOfWorkService : IUnitOfWorkService
+    public class UnitOfWorkRepository : IUnitOfWorkRepository
     {
         private readonly ApplicationDbContext _context;
-        public IProjectService Project { get; }
+        public IProjectRepository Project { get; }
 
-        public UnitOfWorkService(ApplicationDbContext context,
-            IProjectService projectService)
+        public UnitOfWorkRepository(ApplicationDbContext context,
+            IProjectRepository projectService)
         {
             _context = context;
             Project = projectService;

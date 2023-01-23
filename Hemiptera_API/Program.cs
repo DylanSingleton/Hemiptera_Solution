@@ -1,14 +1,7 @@
-using Hemiptera_API.Models;
 using Hemiptera_API.Services;
-using Hemiptera_API.Services.Interfaces;
 using Hemiptera_API.Settings;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,36 +12,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "Hemiptera",
-        Description = "Hemiptera Web API"
-    });
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Name = "Authorization",
-        Description = "Bearer Authentication with JWT Token",
-        Type = SecuritySchemeType.Http
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement {
-        {
-            new OpenApiSecurityScheme {
-                Reference = new OpenApiReference {
-                    Id = "Bearer",
-                    Type = ReferenceType.SecurityScheme
-                }
-            },
-            new string[]{}
-        }
-    }); 
-});
+// Register Swagger with JWT Bearer authentication
+builder.Services.RegisterSwaggerGen();
 
+// Configure Database and JWT settings based on enviroment
 if (builder.Environment.IsDevelopment())
 {
     DbContextSettings.ConnectionString = builder.Configuration.GetConnectionString("DeveloperConnection")!;
@@ -66,32 +33,11 @@ else
     Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!));
 }
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = JwtSettings.ValidateIssuer,
-            ValidateAudience = JwtSettings.ValidateAudience,
-            ValidateLifetime = JwtSettings.ValidateLifetime,
-            ValidateIssuerSigningKey = JwtSettings.ValidateIssuerSigningKey,
-            ValidIssuer = JwtSettings.Issuer,
-            ValidAudience = JwtSettings.Audience,
-            IssuerSigningKey = JwtSettings.IssuerSigningKey
-        };
-    });
-
-builder.Services.AddDbContext<ApplicationDbContext>();
-
-builder.Services.AddIdentity<User, Role>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddTransient(typeof(IGenericService<>), typeof(GenericService<>));
-builder.Services.AddTransient<IProjectService, ProjectService>();
-builder.Services.AddTransient<IUnitOfWorkService, UnitOfWorkService>();
-builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
-
+// Register different services to the application
+builder.Services.RegisterAuthentication();
+builder.Services.RegisterDbContext();
+builder.Services.RegisterIdentity();
+builder.Services.RegisterDependencyInjection();
 
 var app = builder.Build();
 

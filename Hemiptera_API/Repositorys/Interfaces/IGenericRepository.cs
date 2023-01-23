@@ -1,6 +1,6 @@
 ﻿namespace Hemiptera_API.Services.Interfaces
 {
-    public interface IGenericService<T> where T : class
+    public interface IGenericRepository<T> where T : class
     {
         ServiceResultWithPayloads<T> GetAll();
         ServiceResultWithPayload<T> GetById(object id);
