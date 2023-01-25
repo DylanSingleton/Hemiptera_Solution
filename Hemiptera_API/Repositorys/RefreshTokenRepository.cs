@@ -9,13 +9,23 @@ public class RefreshTokenRepository : GenericRepository<RefreshToken>, IRefreshT
 {
     public RefreshTokenRepository(ApplicationDbContext context) : base(context) { }
 
-    public RefreshToken GenerateRefreshToken()
+    public RefreshToken GenerateRefreshToken(Guid userId)
     {
-            var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
-            return RefreshToken.From(token);
+            var randomToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+            return RefreshToken.From(userId, randomToken);
     }
 
-    public void RevokeRefreshToken()
+    public void RevokeRefreshToken(Guid userId)
     {
+        var tokenQuery = _context.RefreshTokens.FirstOrDefault(x => x.UserId == userId);
+        if(tokenQuery != null)
+        {
+            _context.RefreshTokens.Remove(tokenQuery);
+        }
+    }
+
+    public ServiceResult ValidateRefreshToken()
+    {
+        throw new NotImplementedException();
     }
 }

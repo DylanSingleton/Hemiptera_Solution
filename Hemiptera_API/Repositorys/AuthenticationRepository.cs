@@ -23,7 +23,7 @@ public class AuthenticationRepository : IAuthenticationRepository
         _userManager = userManager;
     }
 
-    public async Task<ServiceResultWithPayload<string>> LoginAsync(LoginRequest request)
+    public async Task<ServiceResultWithPayload<AuthenticatedResponse>> LoginAsync(LoginRequest request)
     {
         // Find the user by email using the user manager
         var user = await _userManager.FindByEmailAsync(request.Email);
@@ -32,7 +32,7 @@ public class AuthenticationRepository : IAuthenticationRepository
         if (user is null)
         {
             // Return a failure message
-            return new ServiceResultWithPayload<string>(
+            return new ServiceResultWithPayload<AuthenticatedResponse>(
                     new FailedAuthServiceError());
         }
 
@@ -43,15 +43,16 @@ public class AuthenticationRepository : IAuthenticationRepository
         if (authResult.Succeeded)
         {
             // Generate a token and return it along with a success message
-            return new ServiceResultWithPayload<string>(GenerateAccessToken(), true);
+            return new ServiceResultWithPayload<AuthenticatedResponse>(
+                new AuthenticatedResponse(GenerateAccessToken(), user.Id), true);
         }
 
         // If the password is incorrect, return a failure message
-        return new ServiceResultWithPayload<string>(
+        return new ServiceResultWithPayload<AuthenticatedResponse>(
                     new FailedAuthServiceError());
     }
 
-    public async Task<ServiceResultWithPayload<string>> Register(RegisterRequest request)
+    public async Task<ServiceResultWithPayload<AuthenticatedResponse>> Register(RegisterRequest request)
     {
         // Create a new user object with the email and username from the request
         var userToCreate = new User { Email = request.Email, UserName = request.UserName };
@@ -63,11 +64,12 @@ public class AuthenticationRepository : IAuthenticationRepository
         if (createdUser.Succeeded)
         {
             // Generate a token and return it along with a success message
-            return new ServiceResultWithPayload<string>(GenerateAccessToken(), true);
+            return new ServiceResultWithPayload<AuthenticatedResponse>(
+                new AuthenticatedResponse(GenerateAccessToken(), userToCreate.Id), true);
         }
 
         // If there was an error creating the user, return a failure message
-        return new ServiceResultWithPayload<string>(
+        return new ServiceResultWithPayload<AuthenticatedResponse>(
                                 new FailedAuthServiceError());
     }
 

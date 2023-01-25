@@ -4,6 +4,7 @@ using Hemiptera_API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HemipteraAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230125161004_RefreshTokenAndUserRelationship")]
+    partial class RefreshTokenAndUserRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,9 +70,6 @@ namespace HemipteraAPI.Migrations
                     b.Property<string>("Token")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -147,7 +147,7 @@ namespace HemipteraAPI.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("RefreshTokenId")
+                    b.Property<Guid>("RefreshTokenId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SecurityStamp")
@@ -171,8 +171,7 @@ namespace HemipteraAPI.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("RefreshTokenId")
-                        .IsUnique()
-                        .HasFilter("[RefreshTokenId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -284,7 +283,9 @@ namespace HemipteraAPI.Migrations
                 {
                     b.HasOne("Hemiptera_API.Models.RefreshToken", "RefreshToken")
                         .WithOne("User")
-                        .HasForeignKey("Hemiptera_API.Models.User", "RefreshTokenId");
+                        .HasForeignKey("Hemiptera_API.Models.User", "RefreshTokenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("RefreshToken");
                 });

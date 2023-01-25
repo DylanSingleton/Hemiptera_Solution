@@ -31,8 +31,10 @@ namespace Hemiptera_API.Controllers
             {
                 var getAuthResult = await _authenticationService.LoginAsync(request);
                 if (getAuthResult.IsSuccessful)
-                {
-                    return Ok(MapAuthenticationResponse(getAuthResult, GetRefreshToken()));
+                {   
+                    return Ok(MapAuthenticationResponse(
+                        getAuthResult.Payload!.AccessToken,
+                        GetRefreshToken(getAuthResult.Payload.UserId)));
                 }
 
                 return new ObjectResult(getAuthResult.Error)
@@ -53,7 +55,9 @@ namespace Hemiptera_API.Controllers
                 if (getAuthResult.IsSuccessful)
                 {
                     return Ok(
-                        MapAuthenticationResponse(getAuthResult, GetRefreshToken()));
+                        MapAuthenticationResponse(
+                            getAuthResult.Payload!.AccessToken,
+                            GetRefreshToken(getAuthResult.Payload.UserId)));
                 }
 
                 return new ObjectResult(getAuthResult.Error)
@@ -62,18 +66,23 @@ namespace Hemiptera_API.Controllers
             return BadRequest(validationResult.Errors);
         }
 
-        private RefreshToken GetRefreshToken()
+        private string GetRefreshToken(Guid userId)
         {
-            var refreshToken = _unitOfWork.RefreshToken.GenerateRefreshToken();
+            _unitOfWork.RefreshToken.RevokeRefreshToken(userId);
+
+            var refreshToken = _unitOfWork.RefreshToken.GenerateRefreshToken(userId);
             _unitOfWork.RefreshToken.Insert(refreshToken);
             _unitOfWork.Save();
-            return refreshToken;
+
+            return refreshToken.Token;
         }
-        private static AuthenticationResponse MapAuthenticationResponse(ServiceResultWithPayload<string> accessToken, RefreshToken refreshToken)
+        private static AuthenticationResponse MapAuthenticationResponse(
+            string accessToken,
+            string refreshToken)
         {
             return new AuthenticationResponse(
-                accessToken.Payload!,
-                refreshToken.Token);
+                accessToken,
+                refreshToken);
         }
     }
 }

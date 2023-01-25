@@ -7,35 +7,37 @@ namespace Hemiptera_API.Models;
 public class RefreshToken
 {
     public Guid Id { get; set; }
+    public Guid UserId { get; set; }
+    public virtual User User { get; set; }
     public string Token { get; set; } = string.Empty;
     public DateTime ExpiryDateTime { get; set; }
-    public bool IsExpired { get; set; }
 
     private RefreshToken(
         Guid id,
+        Guid userId,
         string token,
-        DateTime expiryDateTime,
-        bool isExpired)
+        DateTime expiryDateTime)
     {
         Id = id;
         Token = token;
+        UserId = userId;
         ExpiryDateTime = expiryDateTime;
-        IsExpired = isExpired;
     }
 
     public static RefreshToken Create(
+        Guid UserId,
         string token,
         Guid? id = null)
     {
         return new RefreshToken(
             id ?? Guid.NewGuid(),
+            UserId,
             token,
-            DateTime.Now.AddDays(JwtSettings.DayLifetime),
-            false);
+            DateTime.Now.AddDays(JwtSettings.DayLifetime));
     }
 
-    public static RefreshToken From(string token)
+    public static RefreshToken From(Guid UserId, string token)
     {
-        return Create(token);
+        return Create(UserId, token);
     }
 }
