@@ -9,10 +9,11 @@ namespace Hemiptera_API.Models
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     {
-        DbSet<Project> Projects { get; set; }
-
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<IdentityDbContext> options) : base(options)
         { }
+
+        DbSet<Project> Projects { get; set; }
+        DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -24,6 +25,7 @@ namespace Hemiptera_API.Models
         {
             base.OnModelCreating(modelBuilder);
             new ProjectMap(modelBuilder.Entity<Project>());
+            new RefreshTokenMap(modelBuilder.Entity<RefreshToken>());
         }
     }
 }

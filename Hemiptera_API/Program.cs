@@ -1,3 +1,4 @@
+using Hemiptera_API.Repositorys.Interfaces;
 using Hemiptera_API.Services;
 using Hemiptera_API.Settings;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,7 @@ else
     JwtSettings.Issuer = builder.Configuration["Jwt:Issuer"]!;
     JwtSettings.Audience = builder.Configuration["Jwt:Audience"]!;
     JwtSettings.IssuerSigningKey = new SymmetricSecurityKey(
-    Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!));
+        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!));
 }
 
 // Register different services to the application

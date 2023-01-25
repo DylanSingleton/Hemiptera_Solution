@@ -2,18 +2,14 @@
 
 namespace Hemiptera_API.Models.Mapping
 {
-    public class ProjectMap
+    public class RefreshTokenMap
     {
-        public ProjectMap(EntityTypeBuilder<Project> entityTypeBuilder)
+        public RefreshTokenMap(EntityTypeBuilder<RefreshToken> entityTypeBuilder)
         {
             entityTypeBuilder.HasKey(x => x.Id);
-            entityTypeBuilder.Property(x => x.Name).IsRequired();
-            entityTypeBuilder.Property(x => x.Description);
-            entityTypeBuilder.Property(x => x.RepositoryLink);
-            entityTypeBuilder.Property(x => x.StartDatetTime).IsRequired();
-            entityTypeBuilder.Property(x => x.EndDatetTime);
-            entityTypeBuilder.Property(x => x.Status).IsRequired();
-            entityTypeBuilder.Property(x => x.Type).IsRequired();
+            entityTypeBuilder.Property(x => x.Token).IsRequired();
+            entityTypeBuilder.Property(x => x.ExpiryDateTime).IsRequired();
+            entityTypeBuilder.Property(x => x.IsExpired).IsRequired();
         }
     }
 }

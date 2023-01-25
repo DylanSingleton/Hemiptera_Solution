@@ -4,16 +4,16 @@ using System.Text;
 
 namespace Hemiptera_API.Settings
 {
-    public class JwtSettings
+    public static class JwtSettings
     {
-        public static bool ValidateIssuer = true;
-        public static bool ValidateAudience = true;
-        public static bool ValidateLifetime = true;
-
-        public static bool ValidateIssuerSigningKey = true;
-        public static string Issuer { get; set; } = string.Empty;
-        public static string Audience { get; set; } = string.Empty;
-        public static SecurityKey IssuerSigningKey;
-        public static int Lifetime = 15;
+        public const bool ValidateIssuer = true;
+        public const bool ValidateAudience = true;
+        public const bool ValidateLifetime = true;
+        public const bool ValidateIssuerSigningKey = true;
+        public static string Issuer { get; set; }
+        public static string Audience { get; set; }
+        public static SecurityKey IssuerSigningKey { get; set; } 
+        public const int MinuteLifetime = 15;
+        public const int DayLifetime = 7;
     }
 }
