@@ -3,22 +3,22 @@ using System.Net;
 
 namespace Hemiptera_API.Services
 {
-    public class ServiceResult
+    public class OperationResult
     {
         public bool IsSuccessful { get; }
-        public ServiceError? Error { get; }
+        public OperationError? Error { get; }
 
-        public ServiceResult()
+        public OperationResult()
             : this(false)
         {
 
         }
-        public ServiceResult(bool isSuccessful)
+        public OperationResult(bool isSuccessful)
         {
             IsSuccessful = isSuccessful;
         }
 
-        public ServiceResult(ServiceError serviceError)
+        public OperationResult(OperationError serviceError)
             : this(false) 
         {
             Error = serviceError;

@@ -3,9 +3,9 @@ using System.Net;
 
 namespace Hemiptera_API.Services.Service_Errors
 {
-    public class AlreadyExistsServiceError : ServiceError
+    public class AlreadyExistsOperationError : OperationError
     {
-        public AlreadyExistsServiceError(string typeName, string id)
+        public AlreadyExistsOperationError(string typeName, string id)
             : base($"{typeName} with the ID : {id} already exists.", HttpStatusCode.UnprocessableEntity)
         {
         }

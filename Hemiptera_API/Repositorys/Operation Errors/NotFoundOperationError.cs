@@ -3,14 +3,14 @@ using System.Net;
 
 namespace Hemiptera_API.Services.Service_Errors
 {
-    public class NotFoundServiceError : ServiceError
+    public class NotFoundOperationError : OperationError
     {
-        public NotFoundServiceError(string typeName, string id)
+        public NotFoundOperationError(string typeName, string id)
             : base($"{typeName} with the ID : {id} not found.", HttpStatusCode.NotFound)
         {
         }
 
-        public NotFoundServiceError(string typeName)
+        public NotFoundOperationError(string typeName)
             : base($"{typeName} table contains no records", HttpStatusCode.NotFound) 
         {
         }

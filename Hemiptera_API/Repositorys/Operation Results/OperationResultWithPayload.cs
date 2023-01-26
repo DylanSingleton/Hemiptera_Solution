@@ -3,21 +3,21 @@ using System.Net;
 
 namespace Hemiptera_API.Services
 {
-    public class ServiceResultWithPayload<T> : ServiceResult
+    public class OperationResultWithPayload<T> : OperationResult
     {
         public T? Payload { get; set; }
-        public ServiceResultWithPayload(T payload)
+        public OperationResultWithPayload(T payload)
             : this(payload, false)
         {
         }
 
-        public ServiceResultWithPayload(T payload, bool IsSuccessful)
+        public OperationResultWithPayload(T payload, bool IsSuccessful)
             : base(IsSuccessful)
         {
             Payload = payload;
         }
 
-        public ServiceResultWithPayload(ServiceError serviceError)
+        public OperationResultWithPayload(OperationError serviceError)
             : base(serviceError)
         {
         }

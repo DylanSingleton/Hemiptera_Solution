@@ -18,7 +18,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _table = _context.Set<T>();
     }
 
-    public ServiceResult Delete(object id)
+    public OperationResult Delete(object id)
     {
         if (_table is null)
         {
@@ -29,15 +29,15 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
         if (entity is null)
         {
-            return new ServiceResult(new NotFoundServiceError(
+            return new OperationResult(new NotFoundOperationError(
                 typeof(T).Name,
                 id.ToString()!));
         }
         _table.Remove(entity);
-        return new ServiceResult(true);
+        return new OperationResult(true);
     }
 
-    public ServiceResultWithPayloads<T> GetAll()
+    public OperationResultWithPayloads<T> GetAll()
     {
         if(_table is null)
         {
@@ -47,11 +47,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         var getResult = _table.ToList();
 
         return getResult.Any()
-          ? new ServiceResultWithPayloads<T>(getResult, true)
-          : new ServiceResultWithPayloads<T>(new NotFoundServiceError(typeof(T).Name));
+          ? new OperationResultWithPayloads<T>(getResult, true)
+          : new OperationResultWithPayloads<T>(new NotFoundOperationError(typeof(T).Name));
     }
 
-    public ServiceResultWithPayload<T> GetById(object id)
+    public OperationResultWithPayload<T> GetById(object id)
     {
         if(_table is null)
         {
@@ -61,12 +61,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         var entity = _table.Find(id);
 
         return entity != null
-             ? new ServiceResultWithPayload<T>(entity, true)
-             : new ServiceResultWithPayload<T>(
-                 new NotFoundServiceError(typeof(T).Name, id.ToString()));
+             ? new OperationResultWithPayload<T>(entity, true)
+             : new OperationResultWithPayload<T>(
+                 new NotFoundOperationError(typeof(T).Name, id.ToString()));
     }
 
-    public ServiceResultWithPayload<T> Insert(T obj)
+    public OperationResultWithPayload<T> Insert(T obj)
     {
         if (_table is null)
         {
@@ -75,14 +75,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         if (_table.Contains(obj))
         {
             var id = _context.Entry(obj).Property("Id").CurrentValue!.ToString()!;
-            return new ServiceResultWithPayload<T>(
-                new AlreadyExistsServiceError(typeof(T).Name, id));
+            return new OperationResultWithPayload<T>(
+                new AlreadyExistsOperationError(typeof(T).Name, id));
         }
         _table.Add(obj);
-        return new ServiceResultWithPayload<T>(obj, true);
+        return new OperationResultWithPayload<T>(obj, true);
     }
 
-    public ServiceResultWithPayload<T> Update(T obj)
+    public OperationResultWithPayload<T> Update(T obj)
     {
         if (_table is null)
         {
@@ -91,11 +91,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         if (!_table.Contains(obj))
         {
             var id = _context.Entry(obj).Property("Id").CurrentValue!.ToString()!;
-            return new ServiceResultWithPayload<T>(
-                new NotFoundServiceError(typeof(T).Name, id));
+            return new OperationResultWithPayload<T>(
+                new NotFoundOperationError(typeof(T).Name, id));
         }
         _table.Attach(obj);
         _context.Entry(obj).State = EntityState.Modified;
-        return new ServiceResultWithPayload<T>(obj, true);
+        return new OperationResultWithPayload<T>(obj, true);
     }
 }

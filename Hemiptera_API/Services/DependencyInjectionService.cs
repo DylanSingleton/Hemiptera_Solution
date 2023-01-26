@@ -1,4 +1,5 @@
-﻿using Hemiptera_API.Repositorys;
+﻿using Hemiptera_API.Helpers;
+using Hemiptera_API.Repositorys;
 using Hemiptera_API.Repositorys.Interfaces;
 using Hemiptera_API.Services.Interfaces;
 
@@ -13,5 +14,6 @@ public static class DependencyInjectionService
         services.AddTransient<IUnitOfWorkRepository, UnitOfWorkRepository>();
         services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
         services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddTransient<JwtHelper>();
     }
 }

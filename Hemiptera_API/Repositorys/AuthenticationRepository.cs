@@ -23,7 +23,7 @@ public class AuthenticationRepository : IAuthenticationRepository
         _userManager = userManager;
     }
 
-    public async Task<ServiceResultWithPayload<AuthenticatedResponse>> LoginAsync(LoginRequest request)
+    public async Task<OperationResultWithPayload<List<Claim>>> LoginAsync(LoginRequest request)
     {
         // Find the user by email using the user manager
         var user = await _userManager.FindByEmailAsync(request.Email);
@@ -32,8 +32,8 @@ public class AuthenticationRepository : IAuthenticationRepository
         if (user is null)
         {
             // Return a failure message
-            return new ServiceResultWithPayload<AuthenticatedResponse>(
-                    new FailedAuthServiceError());
+            return new OperationResultWithPayload<List<Claim>>(
+                    new FailedAuthOperationError());
         }
 
         // Check the password using the sign-in manager
@@ -42,17 +42,17 @@ public class AuthenticationRepository : IAuthenticationRepository
         // If the password is correct
         if (authResult.Succeeded)
         {
+            
             // Generate a token and return it along with a success message
-            return new ServiceResultWithPayload<AuthenticatedResponse>(
-                new AuthenticatedResponse(GenerateAccessToken(), user.Id), true);
+            return new OperationResultWithPayload<List<Claim>>(new List<Claim> { });
         }
 
         // If the password is incorrect, return a failure message
-        return new ServiceResultWithPayload<AuthenticatedResponse>(
-                    new FailedAuthServiceError());
+        return new OperationResultWithPayload<List<Claim>>(
+                    new FailedAuthOperationError());
     }
 
-    public async Task<ServiceResultWithPayload<AuthenticatedResponse>> Register(RegisterRequest request)
+    public async Task<OperationResult> Register(RegisterRequest request)
     {
         // Create a new user object with the email and username from the request
         var userToCreate = new User { Email = request.Email, UserName = request.UserName };
@@ -64,38 +64,11 @@ public class AuthenticationRepository : IAuthenticationRepository
         if (createdUser.Succeeded)
         {
             // Generate a token and return it along with a success message
-            return new ServiceResultWithPayload<AuthenticatedResponse>(
-                new AuthenticatedResponse(GenerateAccessToken(), userToCreate.Id), true);
+
         }
 
         // If there was an error creating the user, return a failure message
-        return new ServiceResultWithPayload<AuthenticatedResponse>(
-                                new FailedAuthServiceError());
-    }
-
-    private static string GenerateAccessToken()
-    {
-        // Use the signing credentials from the JwtSettings to create a new SigningCredentials object
-        var credentials = new SigningCredentials(
-            JwtSettings.IssuerSigningKey,
-            SecurityAlgorithms.HmacSha256);
-
-        // Create an array of claims that will be included in the JWT
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier,"name"),
-            new Claim(ClaimTypes.Role,"roles")
-        };
-
-        // Create a new JWT using the claims, expiration time, and signing credentials
-        var token = new JwtSecurityToken(
-            issuer: JwtSettings.Issuer,
-            audience: JwtSettings.Audience,
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(JwtSettings.MinuteLifetime),
-            signingCredentials: credentials);
-
-        // Use the JwtSecurityTokenHandler to write the JWT to a string
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return new OperationResult(
+                                new FailedAuthOperationError());
     }
 }
