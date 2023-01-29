@@ -8,6 +8,6 @@ namespace Hemiptera_API.Services.Interfaces
         OperationResultWithPayload<T> GetById(object id);
         OperationResultWithPayload<T> Insert(T obj);
         OperationResultWithPayload<T> Update(T obj);
-        OperationResult Delete(object id);
+        Result Delete(object id);
     }
 }

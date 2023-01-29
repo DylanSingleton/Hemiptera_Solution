@@ -6,6 +6,7 @@ using Hemiptera_Contracts.Project.Requests;
 using Hemiptera_Contracts.Project.Responses;
 using Hemiptera_Contracts.Project.Validator;
 using Microsoft.AspNetCore.Mvc;
+using NotFoundResult = Hemiptera_API.Results.NotFoundResult;
 
 namespace Hemiptera_API.Controllers
 {
@@ -107,9 +108,12 @@ namespace Hemiptera_API.Controllers
                 _unitOfWork.Save();
                 return NoContent();
             }
+            else if(deleteProjectResult is NotFoundResult notFoundResult)
+            {
+                return NotFound(notFoundResult.Message);
+            }
 
-            return new ObjectResult(deleteProjectResult.Error)
-            { StatusCode = (int)deleteProjectResult.Error!.HttpStatusCode };
+            return BadRequest();
         }
 
         private static ProjectResponse MapProjectResponse(Project project)

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Reflection;
+using NotFoundResult = Hemiptera_API.Results.NotFoundResult;
 
 namespace Hemiptera_API.Services;
 
@@ -21,23 +22,24 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _table = _context.Set<T>();
     }
 
-    public OperationResult Delete(object id)
+    public Result Delete(object id)
     {
         if (_table is null)
         {
             throw new InvalidOperationException();
         }
 
-        T entity = _table.Find(id)!;
+        T entity = _table.Find(id);
+
+        var entityType = entity?.GetType() ?? typeof(T);
 
         if (entity is null)
         {
-            return new OperationResult(new NotFoundOperationError(
-                typeof(T).Name,
-                id.ToString()!));
+            return new NotFoundResult(entityType, id.ToString());
         }
+
         _table.Remove(entity);
-        return new OperationResult(true);
+        return new SuccessResult();
     }
 
     public Result<List<T>> GetAll()
