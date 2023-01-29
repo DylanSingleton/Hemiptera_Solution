@@ -1,9 +1,12 @@
 ﻿using Hemiptera_API.Models;
+using Hemiptera_API.Results;
 using Hemiptera_API.ServiceErrors;
 using Hemiptera_API.Services.Interfaces;
 using Hemiptera_API.Services.Service_Errors;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Reflection;
 
 namespace Hemiptera_API.Services;
 
@@ -37,7 +40,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return new OperationResult(true);
     }
 
-    public OperationResultWithPayloads<T> GetAll()
+    public Result<List<T>> GetAll()
     {
         if(_table is null)
         {
@@ -46,9 +49,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
         var getResult = _table.ToList();
 
-        return getResult.Any()
-          ? new OperationResultWithPayloads<T>(getResult, true)
-          : new OperationResultWithPayloads<T>(new NotFoundOperationError(typeof(T).Name));
+        var firstItem = getResult.FirstOrDefault();
+        var entityType = firstItem?.GetType().GetGenericArguments().FirstOrDefault() ?? typeof(T);
+
+        return getResult.Any() ? new SuccessResult<List<T>>(getResult) : new NotFoundErrorResult<List<T>>(entityType);
     }
 
     public OperationResultWithPayload<T> GetById(object id)

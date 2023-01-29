@@ -1,10 +1,10 @@
 ﻿using Hemiptera_API.Extensions;
 using Hemiptera_API.Models;
+using Hemiptera_API.Results;
 using Hemiptera_API.Services.Interfaces;
 using Hemiptera_Contracts.Project.Requests;
 using Hemiptera_Contracts.Project.Responses;
 using Hemiptera_Contracts.Project.Validator;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hemiptera_API.Controllers
@@ -39,10 +39,14 @@ namespace Hemiptera_API.Controllers
 
             if (getProjectResult.IsSuccessful)
             {
-                return Ok(MapProjectResponse(getProjectResult.Payloads!.ToList()));
+                return Ok(MapProjectResponse(getProjectResult.Payload));
             }
-            return new ObjectResult(getProjectResult.Error)
-            { StatusCode = (int)getProjectResult.Error!.HttpStatusCode };
+            else if (getProjectResult is NotFoundErrorResult<List<Project>> notFoundResult)
+            {
+                return NotFound(notFoundResult.Message);
+            }
+
+            return BadRequest("An error occurred while getting the projects");
         }
 
         [HttpPost("Create")]

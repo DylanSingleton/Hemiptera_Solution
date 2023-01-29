@@ -53,15 +53,14 @@ namespace Hemiptera_API.Controllers
             var validationResult = validator.Validate(request);
             if (validationResult.IsValid)
             {
-                var getAuthResult = await _authenticationService.Register(request);
-                if (getAuthResult.IsSuccessful)
+                var registerResult = await _authenticationService.Register(request);
+                if (registerResult.IsSuccessful)
                 {
-                    //MapAuthenticationResponse()
-                    return Ok();
+                    return Ok(SetTokens(registerResult.Payload));
                 }
 
-                return new ObjectResult(getAuthResult.Error)
-                { StatusCode = (int)getAuthResult.Error!.HttpStatusCode };
+                return new ObjectResult(registerResult.Error)
+                { StatusCode = (int)registerResult.Error!.HttpStatusCode };
             }
             return BadRequest(validationResult.Errors);
         }
@@ -72,22 +71,13 @@ namespace Hemiptera_API.Controllers
             _jwtHelper.GenerateAccessToken(claims),
             _jwtHelper.GenerateRefreshToken());
 
-            var claimId = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            var claimId = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier!);
             var userGuid = Guid.Parse(claimId.ToString());
 
             _unitOfWork.RefreshToken.Insert(RefreshToken.From(userGuid, authResponse.RefreshToken));
             _unitOfWork.Save();
 
             return authResponse;
-        }
-
-        private static AuthenticationResponse MapAuthenticationResponse(
-            string accessToken,
-            string refreshToken)
-        {
-            return new AuthenticationResponse(
-                accessToken,
-                refreshToken);
         }
     }
 }

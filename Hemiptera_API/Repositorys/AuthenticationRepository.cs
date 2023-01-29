@@ -44,7 +44,7 @@ public class AuthenticationRepository : IAuthenticationRepository
         {
             
             // Generate a token and return it along with a success message
-            return new OperationResultWithPayload<List<Claim>>(new List<Claim> { });
+            return new OperationResultWithPayload<List<Claim>>(PopulateUserClaims(user));
         }
 
         // If the password is incorrect, return a failure message
@@ -52,7 +52,7 @@ public class AuthenticationRepository : IAuthenticationRepository
                     new FailedAuthOperationError());
     }
 
-    public async Task<OperationResult> Register(RegisterRequest request)
+    public async Task<OperationResultWithPayload<List<Claim>>> Register(RegisterRequest request)
     {
         // Create a new user object with the email and username from the request
         var userToCreate = new User { Email = request.Email, UserName = request.UserName };
@@ -64,11 +64,20 @@ public class AuthenticationRepository : IAuthenticationRepository
         if (createdUser.Succeeded)
         {
             // Generate a token and return it along with a success message
-
+            return new OperationResultWithPayload<List<Claim>>(PopulateUserClaims(userToCreate));
         }
 
         // If there was an error creating the user, return a failure message
-        return new OperationResult(
+        return new OperationResultWithPayload<List<Claim>>(
                                 new FailedAuthOperationError());
+    }
+
+    private List<Claim> PopulateUserClaims(User user)
+    {
+        return new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email)
+        };
     }
 }

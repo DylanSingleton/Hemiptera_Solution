@@ -7,6 +7,6 @@ namespace Hemiptera_API.Services.Interfaces
     public interface IAuthenticationRepository
     {
         Task<OperationResultWithPayload<List<Claim>>> LoginAsync(LoginRequest request);
-        Task<OperationResult> Register(RegisterRequest request);
+        Task<OperationResultWithPayload<List<Claim>>> Register(RegisterRequest request);
     }
 }
