@@ -9,13 +9,14 @@ using System.Security.Claims;
 
 namespace Hemiptera_API.Controllers
 {
-    public class AuthenticationController : ControllerBase
+    [Route("api/[controller]/")]
+    public class AuthenticationsController : ControllerBase
     {
         private readonly IAuthenticationRepository _authenticationService;
         private readonly JwtHelper _jwtHelper;
         private readonly IUnitOfWorkRepository _unitOfWork;
 
-        public AuthenticationController(
+        public AuthenticationsController(
             IAuthenticationRepository authenticationService,
             JwtHelper jwtHelper,
             IUnitOfWorkRepository unitOfWork)

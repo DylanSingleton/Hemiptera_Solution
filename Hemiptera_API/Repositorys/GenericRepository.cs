@@ -52,7 +52,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         var firstItem = getResult.FirstOrDefault();
         var entityType = firstItem?.GetType().GetGenericArguments().FirstOrDefault() ?? typeof(T);
 
-        return getResult.Any() ? new SuccessResult<List<T>>(getResult) : new NotFoundErrorResult<List<T>>(entityType);
+        return getResult.Any() ? new SuccessResult<List<T>>(getResult) : new NotFoundResult<List<T>>(entityType);
     }
 
     public OperationResultWithPayload<T> GetById(object id)

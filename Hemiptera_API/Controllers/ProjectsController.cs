@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hemiptera_API.Controllers
 {
-    public class ProjectController : ControllerBase
+    [Route("api/[controller]/")]
+    public class ProjectsController : ControllerBase
     {
         private IUnitOfWorkRepository _unitOfWork;
 
-        public ProjectController(IUnitOfWorkRepository unitOfWorkService)
+        public ProjectsController(IUnitOfWorkRepository unitOfWorkService)
         {
             _unitOfWork = unitOfWorkService;
         }
@@ -35,18 +36,18 @@ namespace Hemiptera_API.Controllers
         [HttpGet("GetAll")]
         public IActionResult GetProjects()
         {
-            var getProjectResult = _unitOfWork.Project.GetAll();
+                var getProjectResult = _unitOfWork.Project.GetAll();
 
-            if (getProjectResult.IsSuccessful)
-            {
-                return Ok(MapProjectResponse(getProjectResult.Payload));
-            }
-            else if (getProjectResult is NotFoundErrorResult<List<Project>> notFoundResult)
-            {
-                return NotFound(notFoundResult.Message);
-            }
+                if (getProjectResult.IsSuccessful)
+                {
+                    return Ok(MapProjectResponse(getProjectResult.Payload));
+                }
+                else if (getProjectResult is NotFoundResult<List<Project>> notFoundResult)
+                {
+                    return NotFound(notFoundResult.Message);
+                }
 
-            return BadRequest("An error occurred while getting the projects");
+            return BadRequest();
         }
 
         [HttpPost("Create")]
