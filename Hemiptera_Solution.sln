@@ -7,11 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hemiptera_API", "Hemiptera_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hemiptera_Contracts", "Hemiptera_Contracts\Hemiptera_Contracts.csproj", "{E1B02020-4937-4509-9542-7ACCDB5DE3D4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0B9D8E8-CDC3-466B-BAB7-2C02473B9751}"
-	ProjectSection(SolutionItems) = preProject
-		Docs\Api.md = Docs\Api.md
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
