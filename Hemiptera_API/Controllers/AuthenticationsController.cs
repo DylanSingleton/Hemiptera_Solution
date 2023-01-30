@@ -75,7 +75,7 @@ namespace Hemiptera_API.Controllers
             var claimId = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier!);
             var userGuid = Guid.Parse(claimId.ToString());
 
-            _unitOfWork.RefreshToken.Insert(RefreshToken.From(userGuid, authResponse.RefreshToken));
+            _unitOfWork.RefreshToken.Create(RefreshToken.From(userGuid, authResponse.RefreshToken));
             _unitOfWork.Save();
 
             return authResponse;

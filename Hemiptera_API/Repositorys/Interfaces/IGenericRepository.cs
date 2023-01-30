@@ -6,7 +6,7 @@ namespace Hemiptera_API.Services.Interfaces
     {
         Result<List<T>> GetAll();
         OperationResultWithPayload<T> GetById(object id);
-        OperationResultWithPayload<T> Insert(T obj);
+        Result<T> Create(T obj);
         OperationResultWithPayload<T> Update(T obj);
         Result Delete(object id);
     }

@@ -54,10 +54,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         var firstItem = getResult.FirstOrDefault();
         var entityType = firstItem?.GetType().GetGenericArguments().FirstOrDefault() ?? typeof(T);
 
-        return getResult.Any() ? new SuccessResult<List<T>>(getResult) : new NotFoundResult<List<T>>(entityType);
+        return getResult.Any() 
+            ? new SuccessResult<List<T>>(getResult) 
+            : new NotFoundResult<List<T>>(entityType);
     }
 
-    public OperationResultWithPayload<T> GetById(object id)
+    public Result<T> GetById(object id)
     {
         if(_table is null)
         {
@@ -65,14 +67,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         }
 
         var entity = _table.Find(id);
+        var entityType = entity?.GetType().GetGenericArguments().FirstOrDefault() ?? typeof(T);
 
         return entity != null
-             ? new OperationResultWithPayload<T>(entity, true)
-             : new OperationResultWithPayload<T>(
-                 new NotFoundOperationError(typeof(T).Name, id.ToString()));
+             ? new SuccessResult<T>(entity)
+             : new NotFoundResult<T>(entityType, id.ToString());
     }
 
-    public OperationResultWithPayload<T> Insert(T obj)
+    public Result<T> Create(T obj)
     {
         if (_table is null)
         {
@@ -80,12 +82,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         }
         if (_table.Contains(obj))
         {
-            var id = _context.Entry(obj).Property("Id").CurrentValue!.ToString()!;
-            return new OperationResultWithPayload<T>(
-                new AlreadyExistsOperationError(typeof(T).Name, id));
+            var entityId = _context.Entry(obj).Property("Id").CurrentValue!.ToString()!;
+            var entityType = obj.GetType();
+            return new AlreadyExistsResult<T>(entityType, entityId);
         }
         _table.Add(obj);
-        return new OperationResultWithPayload<T>(obj, true);
+        return new SuccessResult<T>(obj);
     }
 
     public OperationResultWithPayload<T> Update(T obj)

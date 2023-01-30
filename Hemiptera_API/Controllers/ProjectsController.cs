@@ -27,26 +27,29 @@ namespace Hemiptera_API.Controllers
 
             if (getProjectResult.IsSuccessful)
             {
-                return Ok(MapProjectResponse(getProjectResult.Payload!));
+                return Ok(MapProjectResponse(getProjectResult.Payload));
+            }
+            else if (getProjectResult is NotFoundResult<Project> notFoundResult)
+            {
+                return NotFound(notFoundResult.Message);
             }
 
-            return new ObjectResult(getProjectResult.Error)
-            { StatusCode = (int)getProjectResult.Error!.HttpStatusCode };
+            return BadRequest();
         }
 
         [HttpGet("GetAll")]
         public IActionResult GetProjects()
         {
-                var getProjectResult = _unitOfWork.Project.GetAll();
+            var getProjectResult = _unitOfWork.Project.GetAll();
 
-                if (getProjectResult.IsSuccessful)
-                {
-                    return Ok(MapProjectResponse(getProjectResult.Payload));
-                }
-                else if (getProjectResult is NotFoundResult<List<Project>> notFoundResult)
-                {
-                    return NotFound(notFoundResult.Message);
-                }
+            if (getProjectResult.IsSuccessful)
+            {
+                return Ok(MapProjectResponse(getProjectResult.Payload));
+            }
+            else if (getProjectResult is NotFoundResult<List<Project>> notFoundResult)
+            {
+                return NotFound(notFoundResult.Message);
+            }
 
             return BadRequest();
         }
@@ -59,16 +62,19 @@ namespace Hemiptera_API.Controllers
             var validationResult = validator.Validate(request);
             if (validationResult.IsValid)
             {
-                var createProjectResult = _unitOfWork.Project.Insert(Project.From(request));
+                var createProjectResult = _unitOfWork.Project.Create(Project.From(request));
 
                 if (createProjectResult.IsSuccessful)
                 {
                     _unitOfWork.Save();
-                    return GetProjectCreatedAt(createProjectResult.Payload!);
+                    return GetProjectCreatedAt(createProjectResult.Payload);
+                }
+                else if (createProjectResult is AlreadyExistsResult<Project> alreadyExistsResult)
+                {
+                    return Conflict(alreadyExistsResult.Message);
                 }
 
-                return new ObjectResult(createProjectResult.Error)
-                { StatusCode = (int)createProjectResult.Error!.HttpStatusCode };
+                return BadRequest();
             }
             else
             {
@@ -93,9 +99,12 @@ namespace Hemiptera_API.Controllers
             {
                 return Ok(updateProjectResult);
             }
+            else if (updateProjectResult is NotFoundResult<Project> notFoundResult)
+            {
+                return NotFound(notFoundResult.Message);
+            }
 
-            return new ObjectResult(updateProjectResult.Error)
-            { StatusCode = (int)updateProjectResult.Error!.HttpStatusCode };
+            return BadRequest();
         }
 
         [HttpDelete("Delete/{id:guid}")]
@@ -108,7 +117,7 @@ namespace Hemiptera_API.Controllers
                 _unitOfWork.Save();
                 return NoContent();
             }
-            else if(deleteProjectResult is NotFoundResult notFoundResult)
+            else if (deleteProjectResult is NotFoundResult notFoundResult)
             {
                 return NotFound(notFoundResult.Message);
             }

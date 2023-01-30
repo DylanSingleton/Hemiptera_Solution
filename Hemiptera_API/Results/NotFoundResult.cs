@@ -11,7 +11,6 @@ namespace Hemiptera_API.Results
         public NotFoundResult(Type entityType, string entityId) : base($"{entityType.Name} could not be found with the ID : {entityId}.")
         {
         }
-
     }
 
     public class NotFoundResult : ErrorResult
@@ -23,6 +22,5 @@ namespace Hemiptera_API.Results
         public NotFoundResult(Type entityType, string entityId) : base($"{entityType.Name} could not be found with the ID : {entityId}.")
         {
         }
-
     }
 }
