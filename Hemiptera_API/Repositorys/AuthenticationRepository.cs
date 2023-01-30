@@ -1,6 +1,6 @@
 ﻿using Hemiptera_API.Models;
+using Hemiptera_API.Results;
 using Hemiptera_API.Services.Interfaces;
-using Hemiptera_API.Services.Service_Errors;
 using Hemiptera_API.Settings;
 using Hemiptera_Contracts.Authentication.Requests;
 using Hemiptera_Contracts.Authentication.Responses;
@@ -23,7 +23,7 @@ public class AuthenticationRepository : IAuthenticationRepository
         _userManager = userManager;
     }
 
-    public async Task<OperationResultWithPayload<List<Claim>>> LoginAsync(LoginRequest request)
+    public async Task<Result<List<Claim>>> LoginAsync(LoginRequest request)
     {
         // Find the user by email using the user manager
         var user = await _userManager.FindByEmailAsync(request.Email);
@@ -32,8 +32,7 @@ public class AuthenticationRepository : IAuthenticationRepository
         if (user is null)
         {
             // Return a failure message
-            return new OperationResultWithPayload<List<Claim>>(
-                    new FailedAuthOperationError());
+            return new ErrorResult<List<Claim>>("Invalid email or password");
         }
 
         // Check the password using the sign-in manager
@@ -42,17 +41,15 @@ public class AuthenticationRepository : IAuthenticationRepository
         // If the password is correct
         if (authResult.Succeeded)
         {
-            
             // Generate a token and return it along with a success message
-            return new OperationResultWithPayload<List<Claim>>(PopulateUserClaims(user));
+            return new SuccessResult<List<Claim>>(PopulateUserClaims(user));
         }
 
         // If the password is incorrect, return a failure message
-        return new OperationResultWithPayload<List<Claim>>(
-                    new FailedAuthOperationError());
+        return new ErrorResult<List<Claim>>("Invalid email or password");
     }
 
-    public async Task<OperationResultWithPayload<List<Claim>>> Register(RegisterRequest request)
+    public async Task<Result<List<Claim>>> Register(RegisterRequest request)
     {
         // Create a new user object with the email and username from the request
         var userToCreate = new User { Email = request.Email, UserName = request.UserName };
@@ -64,12 +61,11 @@ public class AuthenticationRepository : IAuthenticationRepository
         if (createdUser.Succeeded)
         {
             // Generate a token and return it along with a success message
-            return new OperationResultWithPayload<List<Claim>>(PopulateUserClaims(userToCreate));
+            return new SuccessResult<List<Claim>>(PopulateUserClaims(userToCreate));
         }
 
         // If there was an error creating the user, return a failure message
-        return new OperationResultWithPayload<List<Claim>>(
-                                new FailedAuthOperationError());
+        return new ErrorResult<List<Claim>>("Invalid email or password");
     }
 
     private List<Claim> PopulateUserClaims(User user)

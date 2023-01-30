@@ -1,8 +1,6 @@
 ﻿using Hemiptera_API.Models;
 using Hemiptera_API.Results;
-using Hemiptera_API.ServiceErrors;
 using Hemiptera_API.Services.Interfaces;
-using Hemiptera_API.Services.Service_Errors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

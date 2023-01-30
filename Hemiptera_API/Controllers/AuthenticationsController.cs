@@ -1,9 +1,12 @@
-﻿using Hemiptera_API.Helpers;
+﻿using Hemiptera_API.Extensions;
+using Hemiptera_API.Helpers;
 using Hemiptera_API.Models;
+using Hemiptera_API.Results;
 using Hemiptera_API.Services.Interfaces;
 using Hemiptera_Contracts.Authentication.Requests;
 using Hemiptera_Contracts.Authentication.Responses;
 using Hemiptera_Contracts.Authentication.Validators;
+using Hemiptera_Contracts.Project.Validator;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -29,41 +32,37 @@ namespace Hemiptera_API.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
-            var validator = new LoginRequestValidator();
-            var validationResult = validator.Validate(request);
-            if (validationResult.IsValid)
+            var validationResult = request.Validate(new LoginRequestValidator());
+            if (validationResult.Errors.Any()) return BadRequest(validationResult.Errors);
+
+            var loginResult = await _authenticationService.LoginAsync(request);
+
+            if (loginResult.IsSuccessful)
             {
-                var loginResult = await _authenticationService.LoginAsync(request);
-
-                if (loginResult.IsSuccessful)
-                {
-                    return Ok(SetTokens(loginResult.Payload));
-                }
-
-                return new ObjectResult(loginResult.Error)
-                { StatusCode = (int)loginResult.Error!.HttpStatusCode };
+                return Ok(SetTokens(loginResult.Payload));
             }
-            return BadRequest(validationResult.Errors);
+            else if (loginResult is ErrorResult<List<Claim>> errorResult)
+            {
+                return BadRequest(errorResult.Message);
+            }
+            return BadRequest();
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
+            var validationResult = request.Validate(new RegisterRequestValidator());
+            if (validationResult.Errors.Any()) return BadRequest(validationResult.Errors);
+
             var validator = new RegisterRequestValidator();
 
-            var validationResult = validator.Validate(request);
-            if (validationResult.IsValid)
+            var registerResult = await _authenticationService.Register(request);
+            if (registerResult.IsSuccessful)
             {
-                var registerResult = await _authenticationService.Register(request);
-                if (registerResult.IsSuccessful)
-                {
-                    return Ok(SetTokens(registerResult.Payload));
-                }
-
-                return new ObjectResult(registerResult.Error)
-                { StatusCode = (int)registerResult.Error!.HttpStatusCode };
+                return Ok(SetTokens(registerResult.Payload));
             }
-            return BadRequest(validationResult.Errors);
+
+            return BadRequest();
         }
 
         private AuthenticationResponse SetTokens(List<Claim> claims)
