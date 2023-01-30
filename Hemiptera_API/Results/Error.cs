@@ -4,6 +4,7 @@
     {
         public string? Code { get; set; }
         public string Details { get; set; }
+
         public Error(string details)
         {
             Code = null;

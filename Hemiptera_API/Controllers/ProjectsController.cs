@@ -57,41 +57,29 @@ namespace Hemiptera_API.Controllers
         [HttpPost("Create")]
         public IActionResult CreateProject(CreateProjectRequest request)
         {
-            var validator = new CreateProjectValidator();
+            var validationResult = request.Validate(new CreateProjectValidator());
+            if (validationResult.Errors.Any()) return BadRequest(validationResult.Errors);
 
-            var validationResult = validator.Validate(request);
-            if (validationResult.IsValid)
+            var createProjectResult = _unitOfWork.Project.Create(Project.From(request));
+
+            if (createProjectResult.IsSuccessful)
             {
-                var createProjectResult = _unitOfWork.Project.Create(Project.From(request));
-
-                if (createProjectResult.IsSuccessful)
-                {
-                    _unitOfWork.Save();
-                    return GetProjectCreatedAt(createProjectResult.Payload);
-                }
-                else if (createProjectResult is AlreadyExistsResult<Project> alreadyExistsResult)
-                {
-                    return Conflict(alreadyExistsResult.Message);
-                }
-
-                return BadRequest();
+                _unitOfWork.Save();
+                return GetProjectCreatedAt(createProjectResult.Payload);
             }
-            else
+            else if (createProjectResult is AlreadyExistsResult<Project> alreadyExistsResult)
             {
-                return BadRequest(validationResult.Errors);
+                return Conflict(alreadyExistsResult.Message);
             }
+
+            return BadRequest();
         }
 
         [HttpPut("Update/{id:guid}")]
         public IActionResult UpdateProject(Guid id, UpdateProjectRequest request)
         {
-            var validator = new UpdateProjectValidator();
-            var validationResult = validator.Validate(request);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }
+            var validationResult = request.Validate(new UpdateProjectValidator());
+            if (validationResult.Errors.Any()) return BadRequest(validationResult.Errors);
 
             var updateProjectResult = _unitOfWork.Project.Update(Project.From(id, request));
 

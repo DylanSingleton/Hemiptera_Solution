@@ -44,7 +44,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public Result<List<T>> GetAll()
     {
-        if(_table is null)
+        if (_table is null)
         {
             throw new InvalidOperationException();
         }
@@ -54,14 +54,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         var firstItem = getResult.FirstOrDefault();
         var entityType = firstItem?.GetType().GetGenericArguments().FirstOrDefault() ?? typeof(T);
 
-        return getResult.Any() 
-            ? new SuccessResult<List<T>>(getResult) 
+        return getResult.Any()
+            ? new SuccessResult<List<T>>(getResult)
             : new NotFoundResult<List<T>>(entityType);
     }
 
     public Result<T> GetById(object id)
     {
-        if(_table is null)
+        if (_table is null)
         {
             throw new InvalidOperationException();
         }
@@ -90,7 +90,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return new SuccessResult<T>(obj);
     }
 
-    public OperationResultWithPayload<T> Update(T obj)
+    public Result<T> Update(T obj)
     {
         if (_table is null)
         {
@@ -99,11 +99,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         if (!_table.Contains(obj))
         {
             var id = _context.Entry(obj).Property("Id").CurrentValue!.ToString()!;
-            return new OperationResultWithPayload<T>(
-                new NotFoundOperationError(typeof(T).Name, id));
+            var entityType = obj.GetType();
+            return new NotFoundResult<T>(entityType, id);
         }
         _table.Attach(obj);
         _context.Entry(obj).State = EntityState.Modified;
-        return new OperationResultWithPayload<T>(obj, true);
+        return new SuccessResult<T>(obj);
     }
 }

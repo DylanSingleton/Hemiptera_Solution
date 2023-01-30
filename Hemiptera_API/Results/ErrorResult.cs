@@ -2,8 +2,12 @@
 {
     public class ErrorResult : Result
     {
-        public string Message { get; set; }
-        public IReadOnlyCollection<Error> Errors { get; set; }
+        public string? Message { get; set; }
+        public IReadOnlyCollection<Error>? Errors { get; set; }
+
+        public ErrorResult()
+        {
+        }
 
         public ErrorResult(string message)
         {
@@ -22,8 +26,12 @@
 
     public class ErrorResult<T> : Result<T>
     {
-        public string Message { get; }
-        public IReadOnlyCollection<Error> Errors { get; }
+        public string? Message { get; }
+        public IReadOnlyCollection<Error>? Errors { get; }
+
+        public ErrorResult() : base(default)
+        {
+        }
 
         public ErrorResult(string message) : base(default)
         {
