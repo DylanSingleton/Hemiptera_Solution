@@ -22,7 +22,7 @@ public class UnitOfWorkRepository : IUnitOfWorkRepository
 
     private bool _disposed;
 
-    public void Save() 
+    public void Save()
     {
         _context.SaveChanges();
     }

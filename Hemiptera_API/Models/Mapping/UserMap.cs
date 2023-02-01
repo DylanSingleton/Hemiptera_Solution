@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Hemiptera_API.Models.Mapping
+namespace Hemiptera_API.Models.Mapping;
+
+public class UserMap
 {
-    public class UserMap
+    public UserMap(EntityTypeBuilder<User> entityTypeBuilder)
     {
-        public UserMap(EntityTypeBuilder<User> entityTypeBuilder)
-        {
-        }
     }
 }

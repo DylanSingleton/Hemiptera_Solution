@@ -1,7 +1,6 @@
-﻿namespace Hemiptera_API.Settings
+﻿namespace Hemiptera_API.Settings;
+
+public static class DbContextSettings
 {
-    public static class DbContextSettings
-    {
-        public static string ConnectionString { get; set; } = string.Empty;
-    }
+    public static string ConnectionString { get; set; } = string.Empty;
 }

@@ -1,17 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Hemiptera_API.Models.Enums
+namespace Hemiptera_API.Models.Enums;
+
+public enum ProjectStatus
 {
-    public enum ProjectStatus
-    {
-        New,
-        InProgress,
-        OnHold,
-        Completed,
-        Cancelled,
-        Closed,
-        InReview,
-        Testing,
-        Deployment
-    }
+    New,
+    InProgress,
+    OnHold,
+    Completed,
+    Cancelled,
+    Closed,
+    InReview,
+    Testing,
+    Deployment
 }

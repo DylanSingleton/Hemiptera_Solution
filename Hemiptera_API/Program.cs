@@ -23,7 +23,7 @@ if (builder.Environment.IsDevelopment())
     JwtSettings.Issuer = builder.Configuration["Jwt:DeveloperIssuer"]!;
     JwtSettings.Audience = builder.Configuration["Jwt:DeveloperAudience"]!;
     JwtSettings.IssuerSigningKey = new SymmetricSecurityKey(
-        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:DeveloperKey"]!));
+        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:DeveloperIssuerSigningKey"]!));
 }
 else
 {
@@ -31,7 +31,7 @@ else
     JwtSettings.Issuer = builder.Configuration["Jwt:Issuer"]!;
     JwtSettings.Audience = builder.Configuration["Jwt:Audience"]!;
     JwtSettings.IssuerSigningKey = new SymmetricSecurityKey(
-        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!));
+        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:IssuerSigningKey"]!));
 }
 
 // Register different services to the application

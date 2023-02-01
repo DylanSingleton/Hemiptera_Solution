@@ -1,42 +1,50 @@
-﻿namespace Hemiptera_API.Results
+﻿namespace Hemiptera_API.Results;
+
+public abstract class Result
 {
-    public abstract class Result
+    public bool IsSuccessful { get; protected set; }
+    public bool IsUnsuccessful { get; protected set; }
+
+    public Result(bool isSuccessful)
     {
-        public bool IsSuccessful { get; protected set; }
-        public bool IsUnsuccessful { get; protected set; }
-        public Result()
-        {
-            IsUnsuccessful = !IsSuccessful;
-        }
+        IsSuccessful = isSuccessful;
     }
 
-    public abstract class Result<T> : Result
+    public Result()
     {
-        private T? _payload;
+        IsSuccessful = !IsUnsuccessful;
+    }
+}
 
-        protected Result(T payload)
+public abstract class Result<T> : Result
+{
+    private T? _payload;
+
+    protected Result(T payload)
+    {
+        _payload = payload;
+        IsSuccessful = true;
+        IsUnsuccessful = !IsSuccessful;
+    }
+
+    public T Payload
+    {
+        get
         {
-            _payload = payload;
+            if (IsSuccessful)
+            {
+                return _payload;
+            }
+            else
+            {
+                throw new AccessViolationException
+                    ($"Access to {nameof(_payload)} when {nameof(IsSuccessful)} is false is prohibited.");
+            }
         }
 
-        public T Payload
+        set
         {
-            get
-            {
-                if (IsSuccessful)
-                {
-                    return _payload;
-                }
-                else
-                {
-                    throw new AccessViolationException($"Access to {nameof(_payload)} when {nameof(IsSuccessful)} is false is prohibited.");
-                }
-            }
-
-            set
-            {
-                _payload = value;
-            }
+            _payload = value;
         }
     }
 }

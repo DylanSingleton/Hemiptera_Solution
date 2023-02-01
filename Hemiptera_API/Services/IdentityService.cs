@@ -1,7 +1,5 @@
 ﻿using Hemiptera_API.Models;
-using Hemiptera_API.Settings;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Hemiptera_API.Services;
 

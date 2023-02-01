@@ -1,18 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Hemiptera_API.Models.Enums
+namespace Hemiptera_API.Models.Enums;
+
+public enum ProjectType
 {
-    public enum ProjectType
-    {
-        WebApplication,
-        MobileApplication,
-        DesktopApplication,
-        SystemIntegration,
-        APIDevelopment,
-        CloudBased,
-        DataScience,
-        VirtualReality,
-        IoT,
-        EmbeddedSystem
-    }
+    WebApplication,
+    MobileApplication,
+    DesktopApplication,
+    SystemIntegration,
+    APIDevelopment,
+    CloudBased,
+    DataScience,
+    VirtualReality,
+    IoT,
+    EmbeddedSystem
 }

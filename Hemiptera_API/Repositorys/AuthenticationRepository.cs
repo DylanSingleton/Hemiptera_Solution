@@ -61,7 +61,8 @@ public class AuthenticationRepository : IAuthenticationRepository
         if (createdUser.Succeeded)
         {
             // Generate a token and return it along with a success message
-            return new SuccessResult<List<Claim>>(PopulateUserClaims(userToCreate));
+            var claims = PopulateUserClaims(userToCreate);
+            return new SuccessResult<List<Claim>>(claims);
         }
 
         // If there was an error creating the user, return a failure message
