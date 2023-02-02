@@ -23,12 +23,10 @@ public class AuthenticationsController : ControllerBase
 
     public AuthenticationsController(
         IAuthenticationRepository authenticationRepository,
-        IRefreshTokenRepository refreshTokenRepository,
-        IUnitOfWorkRepository unitOfWork)
+        IRefreshTokenRepository refreshTokenRepository)
     {
         _authenticationRepository = authenticationRepository;
         _refreshTokenRepository = refreshTokenRepository;
-        _unitOfWork = unitOfWork;
     }
 
     [HttpPost("Login")]

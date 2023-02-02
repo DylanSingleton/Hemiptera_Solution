@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using Hemiptera_API.Results;
 using Hemiptera_API.Settings;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -33,11 +34,15 @@ public static class JwtHelper
         return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
     }
 
-    public static List<Claim> GetClaimsFromAccessToken(string accessToken)
+    public static Result<List<Claim>> GetClaimsFromAccessToken(string accessToken)
     {
         var handler = new JwtSecurityTokenHandler();
-        var token = handler.ReadToken(accessToken) as JwtSecurityToken;
+        JwtSecurityToken? token = handler.ReadToken(accessToken) as JwtSecurityToken;
+        if (token is null)
+        {
+            return new ErrorResult<List<Claim>>("Invalid access token");
+        }
         var claims = token.Claims.ToList();
-        return claims;
+        return new SuccessResult<List<Claim>>(claims);
     }
 }

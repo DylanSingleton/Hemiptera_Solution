@@ -30,6 +30,7 @@ public class RefreshTokenRepository : GenericRepository<RefreshToken>, IRefreshT
 
     public void SetRefreshToken(List<Claim> claims, string token)
     {
+        // TO:DO Encrypt refresh token
         var userId = GetUserIdFromClaims(claims);
         _context.RefreshTokens.Add(RefreshToken.From(userId, token));
         _context.SaveChanges();
