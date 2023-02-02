@@ -14,6 +14,5 @@ public static class DependencyInjectionService
         services.AddTransient<IUnitOfWorkRepository, UnitOfWorkRepository>();
         services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
         services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        services.AddTransient<JwtHelper>();
     }
 }

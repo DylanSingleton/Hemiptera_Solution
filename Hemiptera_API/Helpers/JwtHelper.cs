@@ -1,4 +1,5 @@
-﻿using Hemiptera_API.Settings;
+﻿using Azure.Core;
+using Hemiptera_API.Settings;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -6,16 +7,14 @@ using System.Security.Cryptography;
 
 namespace Hemiptera_API.Helpers;
 
-public class JwtHelper
+public static class JwtHelper
 {
-    public string GenerateAccessToken(List<Claim> claims)
+    public static string GenerateAccessToken(List<Claim> claims)
     {
         // Use the signing credentials from the JwtSettings to create a new SigningCredentials object
         var credentials = new SigningCredentials(
             JwtSettings.IssuerSigningKey,
             SecurityAlgorithms.HmacSha256);
-
-        // Create an array of claims that will be included in the JWT
 
         // Create a new JWT using the claims, expiration time, and signing credentials
         var token = new JwtSecurityToken(
@@ -29,8 +28,16 @@ public class JwtHelper
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public string GenerateRefreshToken()
+    public static string GenerateRefreshToken()
     {
         return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+    }
+
+    public static List<Claim> GetClaimsFromAccessToken(string accessToken)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var token = handler.ReadToken(accessToken) as JwtSecurityToken;
+        var claims = token.Claims.ToList();
+        return claims;
     }
 }

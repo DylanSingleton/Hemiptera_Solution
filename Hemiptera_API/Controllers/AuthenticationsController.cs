@@ -1,6 +1,7 @@
 ﻿using Hemiptera_API.Extensions;
 using Hemiptera_API.Helpers;
 using Hemiptera_API.Models;
+using Hemiptera_API.Repositorys;
 using Hemiptera_API.Repositorys.Interfaces;
 using Hemiptera_API.Results;
 using Hemiptera_API.Services.Interfaces;
@@ -17,19 +18,16 @@ namespace Hemiptera_API.Controllers;
 public class AuthenticationsController : ControllerBase
 {
     private readonly IAuthenticationRepository _authenticationRepository;
-    private readonly JwtHelper _jwtHelper;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUnitOfWorkRepository _unitOfWork;
 
     public AuthenticationsController(
         IAuthenticationRepository authenticationRepository,
-        JwtHelper jwtHelper,
         IRefreshTokenRepository refreshTokenRepository,
         IUnitOfWorkRepository unitOfWork)
     {
         _authenticationRepository = authenticationRepository;
         _refreshTokenRepository = refreshTokenRepository;
-        _jwtHelper = jwtHelper;
         _unitOfWork = unitOfWork;
     }
 
@@ -43,12 +41,14 @@ public class AuthenticationsController : ControllerBase
 
         if (loginResult.IsSuccessful)
         {
-            return Ok(SetTokens(loginResult.Payload));
+            var response = TokenHelper.MapAuthResponse(loginResult.Payload, _refreshTokenRepository, Response.Cookies);
+            return Ok(response);
         }
         else if (loginResult is ErrorResult<List<Claim>> errorResult)
         {
             return BadRequest(errorResult.Message);
         }
+
         return BadRequest();
     }
 
@@ -61,25 +61,10 @@ public class AuthenticationsController : ControllerBase
         var registerResult = await _authenticationRepository.Register(request);
         if (registerResult.IsSuccessful)
         {
-            return Ok(SetTokens(registerResult.Payload));
+            var response = TokenHelper.MapAuthResponse(registerResult.Payload, _refreshTokenRepository, Response.Cookies);
+            return Ok(response);
         }
 
         return BadRequest();
-    }
-
-    private AuthenticationResponse SetTokens(List<Claim> claims)
-    {
-        var authResponse = new AuthenticationResponse(
-        _jwtHelper.GenerateAccessToken(claims),
-        _jwtHelper.GenerateRefreshToken());
-
-        var userId = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier.ToString());
-        var userGuid = Guid.Parse(userId!.Value);
-        _refreshTokenRepository.RevokeRefreshToken(userGuid);
-
-        _unitOfWork.RefreshToken.Create(RefreshToken.From(userGuid, authResponse.RefreshToken));
-        _unitOfWork.Save();
-
-        return authResponse;
     }
 }
