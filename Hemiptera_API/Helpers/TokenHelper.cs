@@ -1,7 +1,7 @@
 ﻿using Hemiptera_API.Repositorys.Interfaces;
-using Hemiptera_Contracts.Authentication.Responses;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using Hemiptera_Contracts.Authentications.Responses;
 
 namespace Hemiptera_API.Helpers
 {
@@ -33,7 +33,6 @@ namespace Hemiptera_API.Helpers
             IRefreshTokenRepository refreshTokenRepository,
             IResponseCookies responseCookies)
         {
-            refreshTokenRepository.RevokeRefreshToken(claims);
             refreshTokenRepository.SetRefreshToken(claims, refreshToken);
 
             responseCookies.Append("refreshToken", refreshToken);

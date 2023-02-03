@@ -1,7 +1,6 @@
 ﻿using Hemiptera_API.Results;
-using Hemiptera_Contracts.Authentication.Requests;
-using Hemiptera_Contracts.Authentication.Responses;
 using System.Security.Claims;
+using Hemiptera_Contracts.Authentications.Requests;
 
 namespace Hemiptera_API.Services.Interfaces;
 

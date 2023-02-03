@@ -1,4 +1,4 @@
-﻿namespace Hemiptera_Contracts.Project.Requests;
+﻿namespace Hemiptera_Contracts.Projects.Requests;
 public record CreateProjectRequest(
     string Name,
     string Description,

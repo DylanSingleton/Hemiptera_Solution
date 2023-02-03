@@ -12,7 +12,7 @@ namespace Hemiptera_API.Services;
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
     internal readonly ApplicationDbContext _context;
-    internal DbSet<T>? _table = null;
+    private DbSet<T>? _table = null;
 
     public GenericRepository(ApplicationDbContext context)
     {

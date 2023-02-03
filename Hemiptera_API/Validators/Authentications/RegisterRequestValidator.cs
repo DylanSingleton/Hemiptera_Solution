@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Hemiptera_Contracts.Authentication.Requests;
+using Hemiptera_Contracts.Authentications.Requests;
 
 namespace Hemiptera_API.Validators.Authentications;
 

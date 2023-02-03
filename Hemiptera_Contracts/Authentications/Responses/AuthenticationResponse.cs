@@ -1,4 +1,4 @@
-﻿namespace Hemiptera_Contracts.Authentication.Responses;
+﻿namespace Hemiptera_Contracts.Authentications.Responses;
 public record AuthenticationResponse(
     string AccessToken,
     string RefreshToken);

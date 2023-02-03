@@ -1,14 +1,9 @@
 ﻿using Hemiptera_API.Models;
 using Hemiptera_API.Results;
 using Hemiptera_API.Services.Interfaces;
-using Hemiptera_API.Settings;
-using Hemiptera_Contracts.Authentication.Requests;
-using Hemiptera_Contracts.Authentication.Responses;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
+using Hemiptera_Contracts.Authentications.Requests;
 
 namespace Hemiptera_API.Services;
 
@@ -73,8 +68,8 @@ public class AuthenticationRepository : IAuthenticationRepository
     {
         return new List<Claim>
         {
-            new (ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new (ClaimTypes.Email, user.Email!)
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email!)
         };
     }
 }

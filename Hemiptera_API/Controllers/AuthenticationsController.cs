@@ -1,18 +1,12 @@
-﻿using Hemiptera_API.Extensions;
-using Hemiptera_API.Helpers;
-using Hemiptera_API.Models;
-using Hemiptera_API.Repositorys;
+﻿using Hemiptera_API.Helpers;
 using Hemiptera_API.Repositorys.Interfaces;
 using Hemiptera_API.Results;
 using Hemiptera_API.Services.Interfaces;
 using Hemiptera_API.Utilitys;
-using Hemiptera_Contracts.Authentication.Requests;
-using Hemiptera_Contracts.Authentication.Responses;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Hemiptera_API.Validators.Authentications;
+using Hemiptera_Contracts.Authentications.Requests;
 
 namespace Hemiptera_API.Controllers;
 

@@ -2,8 +2,10 @@
 using Hemiptera_API.Models;
 using Hemiptera_API.Results;
 using Hemiptera_API.Services.Interfaces;
-using Hemiptera_Contracts.Project.Requests;
-using Hemiptera_Contracts.Project.Responses;
+using Hemiptera_API.Utilitys;
+using Hemiptera_API.Validators.Projects;
+using Hemiptera_Contracts.Projects.Requests;
+using Hemiptera_Contracts.Projects.Responses;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -60,9 +62,9 @@ public class ProjectsController : ControllerBase
     [HttpPost("Create")]
     public IActionResult CreateProject(CreateProjectRequest request)
     {
-        // var validationResult = request.Validate(new CreateProjectValidator());
-        // if (validationResult.IsUnsuccessful) return BadRequest(validationResult.Errors);
-
+        var validatorResult = ValidatorResultUtility.Validate(request, new CreateProjectValidator());
+        if (validatorResult.IsUnsuccessful) return BadRequest(validatorResult.Errors);
+        
         var createProjectResult = _unitOfWork.Project.Create(Project.From(request));
 
         if (createProjectResult.IsSuccessful)
@@ -81,9 +83,9 @@ public class ProjectsController : ControllerBase
     [HttpPut("Update/{id:guid}")]
     public IActionResult UpdateProject(Guid id, UpdateProjectRequest request)
     {
-        // var validationResult = request.Validate(new UpdateProjectValidator());
-        // if (validationResult.IsUnsuccessful) return BadRequest(validationResult.Errors);
-
+        var validatorResult = ValidatorResultUtility.Validate(request, new UpdateProjectValidator());
+        if (validatorResult.IsUnsuccessful) return BadRequest(validatorResult.Errors);
+        
         var updateProjectResult = _unitOfWork.Project.Update(Project.From(id, request));
 
         if (updateProjectResult.IsSuccessful)

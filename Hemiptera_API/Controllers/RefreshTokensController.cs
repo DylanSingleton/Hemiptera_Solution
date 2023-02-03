@@ -1,9 +1,7 @@
 ﻿using Hemiptera_API.Helpers;
 using Hemiptera_API.Repositorys.Interfaces;
 using Hemiptera_API.Results;
-using Hemiptera_API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Hemiptera_API.Controllers
 {
@@ -17,6 +15,13 @@ namespace Hemiptera_API.Controllers
             _refreshTokenRepository = refreshTokenRepository;
         }
 
+        [HttpPost("Revoke")]
+        public IActionResult RevokeRefreshToken(Guid userId)
+        {
+            var revokeResult = _refreshTokenRepository.RevokeUserRefreshToken(userId);
+            return !revokeResult.IsSuccessful ? HandleErrorResult(revokeResult) : Unauthorized();
+        }
+        
         [HttpPost("Refresh")]
         public IActionResult RefreshToken()
         {

@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Hemiptera_Contracts.Project.Requests;
+using Hemiptera_Contracts.Projects.Requests;
 
 namespace Hemiptera_API.Validators.Projects;
     public class CreateProjectValidator : AbstractValidator<CreateProjectRequest>

@@ -1,4 +1,4 @@
-﻿namespace Hemiptera_Contracts.Authentication.Requests;
+﻿namespace Hemiptera_Contracts.Authentications.Requests;
 public record RegisterRequest(
     string Email,
     string ConfirmedEmail,

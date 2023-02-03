@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Hemiptera_API.Results;
+﻿using Hemiptera_API.Results;
 using Hemiptera_API.Settings;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
