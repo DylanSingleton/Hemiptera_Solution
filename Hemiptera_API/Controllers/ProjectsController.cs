@@ -6,12 +6,15 @@ using Hemiptera_Contracts.Authentication.Validators;
 using Hemiptera_Contracts.Project.Requests;
 using Hemiptera_Contracts.Project.Responses;
 using Hemiptera_Contracts.Project.Validator;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NotFoundResult = Hemiptera_API.Results.NotFoundResult;
 
 namespace Hemiptera_API.Controllers;
 
 [Route("api/[controller]/")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class ProjectsController : ControllerBase
 {
     private IUnitOfWorkRepository _unitOfWork;
@@ -58,8 +61,8 @@ public class ProjectsController : ControllerBase
     [HttpPost("Create")]
     public IActionResult CreateProject(CreateProjectRequest request)
     {
-        var validationResult = request.Validate(new CreateProjectValidator());
-        if (validationResult.IsUnsuccessful) return BadRequest(validationResult.Errors);
+        // var validationResult = request.Validate(new CreateProjectValidator());
+        // if (validationResult.IsUnsuccessful) return BadRequest(validationResult.Errors);
 
         var createProjectResult = _unitOfWork.Project.Create(Project.From(request));
 
@@ -79,8 +82,8 @@ public class ProjectsController : ControllerBase
     [HttpPut("Update/{id:guid}")]
     public IActionResult UpdateProject(Guid id, UpdateProjectRequest request)
     {
-        var validationResult = request.Validate(new UpdateProjectValidator());
-        if (validationResult.IsUnsuccessful) return BadRequest(validationResult.Errors);
+        // var validationResult = request.Validate(new UpdateProjectValidator());
+        // if (validationResult.IsUnsuccessful) return BadRequest(validationResult.Errors);
 
         var updateProjectResult = _unitOfWork.Project.Update(Project.From(id, request));
 

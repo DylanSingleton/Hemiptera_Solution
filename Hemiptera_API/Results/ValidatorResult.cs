@@ -5,14 +5,15 @@ namespace Hemiptera_API.Results
     public class ValidatorResult : Result
     {
         public string? Message { get; set; }
-        public ICollection<Error>? Errors { get; set; }
+
+        public Dictionary<string, List<string>> Errors { get; set; }
 
         public ValidatorResult()
         {
             IsSuccessful = true;
         }
 
-        public ValidatorResult(string message, List<Error> errors)
+        public ValidatorResult(string message, Dictionary<string, List<string>> errors)
         {
             IsSuccessful = false;
             IsUnsuccessful = true;
@@ -20,11 +21,9 @@ namespace Hemiptera_API.Results
             Message = message;
         }
 
-        public ValidatorResult(string message, Error error)
+        public ValidatorResult(string message)
         {
             IsSuccessful = false;
-            Errors = new List<Error>();
-            Errors.Add(error);
             Message = message;
         }
     }

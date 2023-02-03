@@ -5,11 +5,14 @@ using Hemiptera_API.Repositorys;
 using Hemiptera_API.Repositorys.Interfaces;
 using Hemiptera_API.Results;
 using Hemiptera_API.Services.Interfaces;
+using Hemiptera_API.Utilitys;
 using Hemiptera_Contracts.Authentication.Requests;
 using Hemiptera_Contracts.Authentication.Responses;
 using Hemiptera_Contracts.Authentication.Validators;
 using Hemiptera_Contracts.Project.Validator;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace Hemiptera_API.Controllers;
@@ -19,7 +22,6 @@ public class AuthenticationsController : ControllerBase
 {
     private readonly IAuthenticationRepository _authenticationRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
-    private readonly IUnitOfWorkRepository _unitOfWork;
 
     public AuthenticationsController(
         IAuthenticationRepository authenticationRepository,
@@ -32,8 +34,9 @@ public class AuthenticationsController : ControllerBase
     [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        var validationResult = request.Validate(new LoginRequestValidator());
-        if (validationResult.IsUnsuccessful) return BadRequest(validationResult.Errors);
+        var validatorResult = ValidatorResultUtility.Validate(request, new LoginRequestValidator());
+
+        if (validatorResult.IsUnsuccessful) return BadRequest(JsonConvert.SerializeObject(validatorResult.Errors));
 
         var loginResult = await _authenticationRepository.LoginAsync(request);
 
@@ -53,8 +56,8 @@ public class AuthenticationsController : ControllerBase
     [HttpPost("Register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
-        var validationResult = request.Validate(new RegisterRequestValidator());
-        if (validationResult.IsUnsuccessful) return BadRequest(validationResult.Errors);
+        var validatorResult = ValidatorResultUtility.Validate(request, new RegisterRequestValidator());
+        if (validatorResult.IsUnsuccessful) return BadRequest(validatorResult.Errors);
 
         var registerResult = await _authenticationRepository.Register(request);
         if (registerResult.IsSuccessful)

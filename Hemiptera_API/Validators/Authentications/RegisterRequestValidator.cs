@@ -1,81 +1,73 @@
 ﻿using FluentValidation;
 using Hemiptera_Contracts.Authentication.Requests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Hemiptera_Contracts.Authentication.Validators
+namespace Hemiptera_Contracts.Authentication.Validators;
+
+public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {
-    public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
+    public RegisterRequestValidator()
     {
-        public RegisterRequestValidator()
-        {
-            RuleFor(x => x.Email)
-                .NotEmpty()
-                .EmailAddress()
-                .DependentRules(() =>
-                {
-                    RuleFor(x => x.ConfirmedEmail)
-                        .NotEmpty()
-                        .Equal(x => x.Email);
-                });
-
-            RuleFor(x => x.UserName)
-                .NotEmpty();
-
-            RuleFor(x => x.Password)
-                .NotEmpty()
-                .MinimumLength(8)
-                .MaximumLength(50)
-                .Must(HaveAtleastOneNumber)
-                .When(x => !String.IsNullOrEmpty(x.Password))
-                .WithMessage("Your password must ahve at least one number")
-                .Must(HaveAtLeastOneSymbol)
-                .WithMessage("Your password must have at least one symbol")
-                .When(x => !String.IsNullOrEmpty(x.Password))
-                .DependentRules(() =>
-                    {
-                        RuleFor(x => x.ConfirmedPassword)
-                        .NotEmpty()
-                        .Equal(x => x.Password);
-                    });
-        }
-
-        private bool HaveAtLeastOneSymbol(string password)
-        {
-            string acceptedSymbols = "!@#$%^&*()_-+={}[]|:;<>,.?/~`";
-
-            bool hasSymbol = false;
-
-            for (int i = 0; i < password.Length; i++)
+        RuleFor(x => x.Email)
+            .NotEmpty().WithErrorCode("Email")
+            .EmailAddress().WithErrorCode("Email")
+            .DependentRules(() =>
             {
-                char c = password[i];
-                if (acceptedSymbols.Contains(c))
-                {
-                    hasSymbol = true;
-                    break;
-                }
-            }
+                RuleFor(x => x.ConfirmedEmail)
+                    .Equal(x => x.Email).WithErrorCode("Email");
+            });
 
-            return hasSymbol;
-        }
+        RuleFor(x => x.UserName)
+            .NotEmpty().WithErrorCode("Username");
 
-        private bool HaveAtleastOneNumber(string password)
-        {
-            bool hasNumber = false;
-
-            for (int i = 0; i < password.Length; i++)
+        RuleFor(x => x.Password)
+            .NotNull().WithErrorCode("Password")
+            .DependentRules(() =>
             {
-                char c = password[i];
-                if (char.IsNumber(c))
-                {
-                    hasNumber = true;
-                }
-            }
+                RuleFor(x => x.Password)
+                  .MinimumLength(8).WithErrorCode("Password")
+                  .MaximumLength(25).WithErrorCode("Password")
+                  .Must(HaveAtleastOneNumber).WithErrorCode("Password").WithMessage("{PropertyName} must contain at least one number")
+                  .Must(HaveAtLeastOneSymbol).WithErrorCode("Password").WithMessage("{PropertyName} must contain at least one symbol")
+                  .DependentRules(() =>
+                  {
+                      RuleFor(x => x.ConfirmedPassword)
+                          .Equal(x => x.Password).WithErrorCode("Password");
+                  });
+            });
+    }
 
-            return hasNumber;
+    private bool HaveAtLeastOneSymbol(string password)
+    {
+        string acceptedSymbols = "!@#$%^&*()_-+={}[]|:;<>,.?/~`";
+
+        bool hasSymbol = false;
+
+        for (int i = 0; i < password.Length; i++)
+        {
+            char c = password[i];
+            if (acceptedSymbols.Contains(c))
+            {
+                hasSymbol = true;
+                break;
+            }
         }
+
+        return hasSymbol;
+    }
+
+    private bool HaveAtleastOneNumber(string password)
+    {
+        bool hasNumber = false;
+
+        for (int i = 0; i < password.Length; i++)
+        {
+            char c = password[i];
+            if (char.IsNumber(c))
+            {
+                hasNumber = true;
+            }
+        }
+
+        return hasNumber;
     }
 }
