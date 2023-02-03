@@ -36,7 +36,7 @@ public class AuthenticationsController : ControllerBase
     {
         var validatorResult = ValidatorResultUtility.Validate(request, new LoginRequestValidator());
 
-        if (validatorResult.IsUnsuccessful) return BadRequest(JsonConvert.SerializeObject(validatorResult.Errors));
+        if (validatorResult.IsUnsuccessful) return BadRequest(validatorResult.Errors);
 
         var loginResult = await _authenticationRepository.LoginAsync(request);
 

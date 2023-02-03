@@ -41,6 +41,7 @@ public class ProjectsController : ControllerBase
         return BadRequest();
     }
 
+    [Authorize]
     [HttpGet("GetAll")]
     public IActionResult GetProjects()
     {
