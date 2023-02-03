@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Hemiptera_Contracts.Authentication.Requests;
 
-namespace Hemiptera_Contracts.Authentication.Validators;
+namespace Hemiptera_API.Validators.Authentications;
 
 public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {
@@ -36,38 +36,15 @@ public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
             });
     }
 
-    private bool HaveAtLeastOneSymbol(string password)
+    private static bool HaveAtLeastOneSymbol(string password)
     {
-        string acceptedSymbols = "!@#$%^&*()_-+={}[]|:;<>,.?/~`";
+        const string acceptedSymbols = "!@#$%^&*()_-+={}[]|:;<>,.?/~`";
 
-        bool hasSymbol = false;
-
-        for (int i = 0; i < password.Length; i++)
-        {
-            char c = password[i];
-            if (acceptedSymbols.Contains(c))
-            {
-                hasSymbol = true;
-                break;
-            }
-        }
-
-        return hasSymbol;
+        return password.Any(c => acceptedSymbols.Contains(c));
     }
 
-    private bool HaveAtleastOneNumber(string password)
+    private static bool HaveAtleastOneNumber(string password)
     {
-        bool hasNumber = false;
-
-        for (int i = 0; i < password.Length; i++)
-        {
-            char c = password[i];
-            if (char.IsNumber(c))
-            {
-                hasNumber = true;
-            }
-        }
-
-        return hasNumber;
+        return password.Any(char.IsNumber);
     }
 }

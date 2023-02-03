@@ -37,8 +37,7 @@ public static class JwtHelper
     public static Result<List<Claim>> GetClaimsFromAccessToken(string accessToken)
     {
         var handler = new JwtSecurityTokenHandler();
-        JwtSecurityToken? token = handler.ReadToken(accessToken) as JwtSecurityToken;
-        if (token is null)
+        if (handler.ReadToken(accessToken) is not JwtSecurityToken token)
         {
             return new ErrorResult<List<Claim>>("Invalid access token");
         }

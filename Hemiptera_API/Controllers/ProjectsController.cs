@@ -2,10 +2,8 @@
 using Hemiptera_API.Models;
 using Hemiptera_API.Results;
 using Hemiptera_API.Services.Interfaces;
-using Hemiptera_Contracts.Authentication.Validators;
 using Hemiptera_Contracts.Project.Requests;
 using Hemiptera_Contracts.Project.Responses;
-using Hemiptera_Contracts.Project.Validator;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +31,7 @@ public class ProjectsController : ControllerBase
         {
             return Ok(MapProjectResponse(getProjectResult.Payload));
         }
-        else if (getProjectResult is NotFoundResult<Project> notFoundResult)
+        if (getProjectResult is NotFoundResult<Project> notFoundResult)
         {
             return NotFound(notFoundResult.Message);
         }
@@ -72,7 +70,7 @@ public class ProjectsController : ControllerBase
             _unitOfWork.Save();
             return GetProjectCreatedAt(createProjectResult.Payload);
         }
-        else if (createProjectResult is AlreadyExistsResult<Project> alreadyExistsResult)
+        if (createProjectResult is AlreadyExistsResult<Project> alreadyExistsResult)
         {
             return Conflict(alreadyExistsResult.Message);
         }
@@ -92,7 +90,7 @@ public class ProjectsController : ControllerBase
         {
             return Ok(updateProjectResult);
         }
-        else if (updateProjectResult is NotFoundResult<Project> notFoundResult)
+        if (updateProjectResult is NotFoundResult<Project> notFoundResult)
         {
             return NotFound(notFoundResult.Message);
         }
@@ -110,7 +108,7 @@ public class ProjectsController : ControllerBase
             _unitOfWork.Save();
             return NoContent();
         }
-        else if (deleteProjectResult is NotFoundResult notFoundResult)
+        if (deleteProjectResult is NotFoundResult notFoundResult)
         {
             return NotFound(notFoundResult.Message);
         }

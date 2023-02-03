@@ -38,7 +38,7 @@ public class RefreshTokenRepository : GenericRepository<RefreshToken>, IRefreshT
 
     public Result ValidateRefreshToken(string token)
     {
-        var tokenQuery = _context.RefreshTokens.Where(x => x.Token == token).FirstOrDefault();
+        var tokenQuery = _context.RefreshTokens.FirstOrDefault(x => x.Token == token);
         if (tokenQuery is not null && tokenQuery.ExpiryDateTime > DateTime.Now)
         {
             return new SuccessResult();

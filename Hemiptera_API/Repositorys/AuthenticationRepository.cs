@@ -73,8 +73,8 @@ public class AuthenticationRepository : IAuthenticationRepository
     {
         return new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email)
+            new (ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new (ClaimTypes.Email, user.Email!)
         };
     }
 }

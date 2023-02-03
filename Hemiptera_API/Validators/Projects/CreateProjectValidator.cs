@@ -1,12 +1,7 @@
 ﻿using FluentValidation;
 using Hemiptera_Contracts.Project.Requests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Hemiptera_Contracts.Project.Validator;
+namespace Hemiptera_API.Validators.Projects;
     public class CreateProjectValidator : AbstractValidator<CreateProjectRequest>
     {
         public CreateProjectValidator()

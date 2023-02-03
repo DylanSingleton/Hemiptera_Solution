@@ -24,20 +24,20 @@ public class RefreshToken
         ExpiryDateTime = expiryDateTime;
     }
 
-    public static RefreshToken Create(
-        Guid UserId,
+    private static RefreshToken Create(
+        Guid userId,
         string token,
         Guid? id = null)
     {
         return new RefreshToken(
             id ?? Guid.NewGuid(),
-            UserId,
+            userId,
             token,
             DateTime.Now.AddDays(JwtSettings.DayLifetime));
     }
 
-    public static RefreshToken From(Guid UserId, string token)
+    public static RefreshToken From(Guid userId, string token)
     {
-        return Create(UserId, token);
+        return Create(userId, token);
     }
 }

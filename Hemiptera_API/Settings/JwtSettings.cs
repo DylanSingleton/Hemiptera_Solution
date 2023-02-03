@@ -87,11 +87,11 @@ public static class JwtSettings
     /// <summary>
     /// Method to set the issuer.
     /// </summary>
-    /// <param name="value">The value to set the issuer to</param>
-    private static void SetIssuer(string value)
+    /// <param name="issuer">The value to set the issuer to</param>
+    private static void SetIssuer(string issuer)
     {
-        _issuer = value ?? throw new ArgumentNullException
-              ($"The value for the 'IssuerSigningKey' property in class '{nameof(JwtSettings)}' cannot be null.");
+        _issuer = issuer ?? throw new ArgumentNullException
+              ($"The {issuer} for the 'IssuerSigningKey' property in class '{nameof(JwtSettings)}' cannot be null.");
     }
 
     /// <summary>
@@ -108,11 +108,11 @@ public static class JwtSettings
     /// <summary>
     /// Method to set the audience.
     /// </summary>
-    /// <param name="value">The value to set the audience to</param>
-    private static void SetAudience(string value)
+    /// <param name="audience">The value to set the audience to</param>
+    private static void SetAudience(string audience)
     {
-        _audience = value ?? throw new ArgumentNullException
-                ($"The value for the 'IssuerSigningKey' property in class '{nameof(JwtSettings)}' cannot be null.");
+        _audience = audience ?? throw new ArgumentNullException
+                ($"The {audience} for the 'IssuerSigningKey' property in class '{nameof(JwtSettings)}' cannot be null.");
     }
 
     /// <summary>
@@ -129,10 +129,10 @@ public static class JwtSettings
     /// <summary>
     /// Method to set the the issuer signing key.
     /// </summary>
-    /// <param name="value">The value to set the issuer signing key to</param>
-    private static void SetIssuerSigningKey(SecurityKey value)
+    /// <param name="securityKey">The value to set the issuer signing key to</param>
+    private static void SetIssuerSigningKey(SecurityKey securityKey)
     {
-        _issuerSigningKey = value ?? throw new ArgumentNullException
-                ($"The value for the 'IssuerSigningKey' property in class '{nameof(JwtSettings)}' cannot be null.");
+        _issuerSigningKey = securityKey ?? throw new ArgumentNullException
+                ($"The {securityKey} for the 'IssuerSigningKey' property in class '{nameof(JwtSettings)}' cannot be null.");
     }
 }

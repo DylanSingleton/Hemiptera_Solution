@@ -28,10 +28,11 @@ public static class DbContextSettings
     /// <summary>
     /// Method to set the database connection string.
     /// </summary>
-    /// <param name="value">The value to set the connection string to</param>
-    private static void SetConnectionString(string value)
+    /// <param name="connectionString">The value to set the connection string to</param>
+    /// <exception cref="ArgumentNullException"></exception>
+    private static void SetConnectionString(string connectionString)
     {
-        _connectionString = value ?? throw new ArgumentNullException
-              ($"The value for the 'ConnectionString' property in class '{nameof(DbContextSettings)}' cannot be null.");
+        _connectionString = connectionString ?? throw new ArgumentNullException
+              ($"The {connectionString} value for the 'ConnectionString' property in class '{nameof(DbContextSettings)}' cannot be null.");
     }
 }

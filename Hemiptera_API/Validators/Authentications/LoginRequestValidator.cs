@@ -1,12 +1,7 @@
 ﻿using FluentValidation;
 using Hemiptera_Contracts.Authentication.Requests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Hemiptera_Contracts.Authentication.Validators;
+namespace Hemiptera_API.Validators.Authentications;
 
 public class LoginRequestValidator : AbstractValidator<LoginRequest>
 {

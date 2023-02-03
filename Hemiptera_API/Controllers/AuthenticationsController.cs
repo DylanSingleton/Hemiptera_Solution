@@ -8,12 +8,11 @@ using Hemiptera_API.Services.Interfaces;
 using Hemiptera_API.Utilitys;
 using Hemiptera_Contracts.Authentication.Requests;
 using Hemiptera_Contracts.Authentication.Responses;
-using Hemiptera_Contracts.Authentication.Validators;
-using Hemiptera_Contracts.Project.Validator;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using Hemiptera_API.Validators.Authentications;
 
 namespace Hemiptera_API.Controllers;
 
@@ -35,17 +34,15 @@ public class AuthenticationsController : ControllerBase
     public async Task<IActionResult> Login(LoginRequest request)
     {
         var validatorResult = ValidatorResultUtility.Validate(request, new LoginRequestValidator());
-
         if (validatorResult.IsUnsuccessful) return BadRequest(validatorResult.Errors);
 
         var loginResult = await _authenticationRepository.LoginAsync(request);
-
         if (loginResult.IsSuccessful)
         {
             var response = TokenHelper.MapAuthResponse(loginResult.Payload, _refreshTokenRepository, Response.Cookies);
             return Ok(response);
         }
-        else if (loginResult is ErrorResult<List<Claim>> errorResult)
+        if (loginResult is ErrorResult<List<Claim>> errorResult)
         {
             return BadRequest(errorResult.Message);
         }
@@ -60,12 +57,9 @@ public class AuthenticationsController : ControllerBase
         if (validatorResult.IsUnsuccessful) return BadRequest(validatorResult.Errors);
 
         var registerResult = await _authenticationRepository.Register(request);
-        if (registerResult.IsSuccessful)
-        {
-            var response = TokenHelper.MapAuthResponse(registerResult.Payload, _refreshTokenRepository, Response.Cookies);
-            return Ok(response);
-        }
+        if (!registerResult.IsSuccessful) return BadRequest();
+        var response = TokenHelper.MapAuthResponse(registerResult.Payload, _refreshTokenRepository, Response.Cookies);
+        return Ok(response);
 
-        return BadRequest();
     }
 }

@@ -12,9 +12,8 @@ namespace Hemiptera_API.Utilitys
             {
                 return new ValidatorResult();
             }
-            else
-            {
-                Dictionary<string, List<string>> validationErrors = new Dictionary<string, List<string>>();
+            
+            var validationErrors = new Dictionary<string, List<string>>();
                 foreach (var error in validationResult.Errors)
                 {
                     if (validationErrors.ContainsKey(error.ErrorCode))
@@ -27,10 +26,6 @@ namespace Hemiptera_API.Utilitys
                     }
                 }
                 return new ValidatorResult("Errors", validationErrors);
-
-                // var validationErrors = validationResult.Errors.Select(x => new Error(x.PropertyName, x.ErrorMessage)).ToList();
-                //  return new ValidatorResult("Errors", validationErrors.ToList());
             }
         }
     }
-}
