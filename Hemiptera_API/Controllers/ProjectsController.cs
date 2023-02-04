@@ -6,6 +6,7 @@ using Hemiptera_API.Utilitys;
 using Hemiptera_API.Validators.Projects;
 using Hemiptera_Contracts.Projects.Requests;
 using Hemiptera_Contracts.Projects.Responses;
+using Hemiptera_Contracts.Users.Responses;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +52,7 @@ public class ProjectsController : ControllerBase
         {
             return Ok(MapProjectResponse(getProjectResult.Payload));
         }
-        else if (getProjectResult is NotFoundResult<List<Project>> notFoundResult)
+        if (getProjectResult is NotFoundResult<List<Project>> notFoundResult)
         {
             return NotFound(notFoundResult.Message);
         }
@@ -118,6 +119,55 @@ public class ProjectsController : ControllerBase
         return BadRequest();
     }
 
+    [HttpPost("AssignUser/{userId:guid}/{projectId:guid}")]
+    public IActionResult AssignUserToProject(UsersProjectsRequest request)
+    {
+        var assignUserResult = _unitOfWork.Project.AssignUserToProject(request);
+        
+        if (assignUserResult is NotFoundResult notFoundResult)
+        {
+            return BadRequest(notFoundResult.Message);
+        }
+        
+        if (!assignUserResult.IsSuccessful) return BadRequest();
+
+        _unitOfWork.Save();
+        return Ok();
+    }
+    
+    [HttpPost("RemoveUser/{userId:guid}/{projectId:guid}")]
+    public IActionResult RemoveUserToProject(UsersProjectsRequest request)
+    {
+        var removeUserResult = _unitOfWork.Project.RemoveUserFromProject(request);
+        
+        if (removeUserResult is NotFoundResult notFoundResult)
+        {
+            return BadRequest(notFoundResult.Message);
+        }
+        
+        if (!removeUserResult.IsSuccessful) return BadRequest();
+
+        _unitOfWork.Save();
+        return Ok();
+    }
+
+    [HttpPost("GetUsers/{projectId:guid}")]
+    public IActionResult GetUsersInProject(Guid projectId)
+    {
+        var getResult = _unitOfWork.Project.GetUsersInProject(projectId);
+        if (getResult.IsSuccessful)
+        {
+            return Ok(MapUserResponse(getResult.Payload));
+        }
+
+        if (getResult is NotFoundResult<List<User>> notFoundResult)
+        {
+            return BadRequest(notFoundResult.Message);
+        }
+
+        return BadRequest();
+    }
+
     private static ProjectResponse MapProjectResponse(Project project)
     {
         return new ProjectResponse(
@@ -135,6 +185,16 @@ public class ProjectsController : ControllerBase
         return projects.ConvertAll(MapProjectResponse);
     }
 
+    private static UserResponse MapUserResponse(User user)
+    {
+        return new UserResponse(user.Email, user.UserName);
+    }
+    
+    private static List<UserResponse> MapUserResponse(List<User> users)
+    {
+        return users.ConvertAll(MapUserResponse);
+    }
+    
     private CreatedAtActionResult GetProjectCreatedAt(Project project)
     {
         return CreatedAtAction(

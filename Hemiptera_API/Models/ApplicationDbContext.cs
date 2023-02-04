@@ -14,6 +14,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 
     public DbSet<Project> Projects { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<UsersProjects> UsersProjects { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -26,5 +27,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
         base.OnModelCreating(modelBuilder);
         new ProjectMap(modelBuilder.Entity<Project>());
         new RefreshTokenMap(modelBuilder.Entity<RefreshToken>());
+        new UsersProjectsMap(modelBuilder.Entity<UsersProjects>());
     }
 }

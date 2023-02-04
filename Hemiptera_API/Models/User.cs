@@ -6,4 +6,6 @@ public class User : IdentityUser<Guid>
 {
     public Guid? RefreshTokenId { get; set; }
     public virtual RefreshToken? RefreshToken { get; set; }
+    public ICollection<UsersProjects> UsersProjects { get; set; }
+
 }

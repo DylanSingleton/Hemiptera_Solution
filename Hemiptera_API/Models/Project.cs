@@ -14,6 +14,7 @@ public class Project
     public DateTime? EndDatetTime { get; }
     public ProjectStatus Status { get; }
     public ProjectType Type { get; }
+    public ICollection<UsersProjects> UsersProjects { get; set; }
 
     private Project(
         Guid id,

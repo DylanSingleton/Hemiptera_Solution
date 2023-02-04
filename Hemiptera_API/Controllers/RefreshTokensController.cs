@@ -15,7 +15,7 @@ namespace Hemiptera_API.Controllers
             _refreshTokenRepository = refreshTokenRepository;
         }
 
-        [HttpPost("Revoke")]
+        [HttpPost("Revoke/{userId:guid}")]
         public IActionResult RevokeRefreshToken(Guid userId)
         {
             var revokeResult = _refreshTokenRepository.RevokeUserRefreshToken(userId);

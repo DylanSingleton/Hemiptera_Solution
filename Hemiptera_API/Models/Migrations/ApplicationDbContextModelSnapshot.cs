@@ -177,6 +177,21 @@ namespace HemipteraAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Hemiptera_API.Models.UsersProjects", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "ProjectId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("UsersProjects");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
@@ -289,6 +304,25 @@ namespace HemipteraAPI.Migrations
                     b.Navigation("RefreshToken");
                 });
 
+            modelBuilder.Entity("Hemiptera_API.Models.UsersProjects", b =>
+                {
+                    b.HasOne("Hemiptera_API.Models.Project", "Project")
+                        .WithMany("UsersProjects")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hemiptera_API.Models.User", "User")
+                        .WithMany("UsersProjects")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Hemiptera_API.Models.Role", null)
@@ -340,10 +374,20 @@ namespace HemipteraAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Hemiptera_API.Models.Project", b =>
+                {
+                    b.Navigation("UsersProjects");
+                });
+
             modelBuilder.Entity("Hemiptera_API.Models.RefreshToken", b =>
                 {
                     b.Navigation("User")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Hemiptera_API.Models.User", b =>
+                {
+                    b.Navigation("UsersProjects");
                 });
 #pragma warning restore 612, 618
         }
