@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Hemiptera_API.Models.Mapping;
 
-public class UsersProjectsMap
+public class UsersProjectsMap : IEntityTypeConfiguration<UsersProjects>
 {
-    public UsersProjectsMap(EntityTypeBuilder<UsersProjects> entityTypeBuilder)
+    public void Configure(EntityTypeBuilder<UsersProjects> entityTypeBuilder)
     {
         entityTypeBuilder
             .HasKey(x => new { x.UserId, x.ProjectId });
@@ -17,6 +18,6 @@ public class UsersProjectsMap
         entityTypeBuilder
             .HasOne(x => x.Project)
             .WithMany(x => x.UsersProjects)
-            .HasForeignKey(x => x.ProjectId);
+            .HasForeignKey(x => x.ProjectId);    
     }
 }

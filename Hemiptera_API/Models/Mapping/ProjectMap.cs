@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Hemiptera_API.Models.Mapping;
 
-public class ProjectMap
+public class ProjectMap : IEntityTypeConfiguration<Project>
 {
-    public ProjectMap(EntityTypeBuilder<Project> entityTypeBuilder)
+    public void Configure(EntityTypeBuilder<Project> entityTypeBuilder)
     {
         entityTypeBuilder.HasKey(x => x.Id);
         entityTypeBuilder.Property(x => x.Name).IsRequired();

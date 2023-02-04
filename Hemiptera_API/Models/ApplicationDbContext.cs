@@ -15,6 +15,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<Project> Projects { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<UsersProjects> UsersProjects { get; set; }
+    public DbSet<Ticket> Tickets { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -25,8 +26,10 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        new ProjectMap(modelBuilder.Entity<Project>());
-        new RefreshTokenMap(modelBuilder.Entity<RefreshToken>());
-        new UsersProjectsMap(modelBuilder.Entity<UsersProjects>());
+        modelBuilder.ApplyConfiguration(new ProjectMap());
+        modelBuilder.ApplyConfiguration(new RefreshTokenMap());
+        modelBuilder.ApplyConfiguration(new UsersProjectsMap());
+        modelBuilder.ApplyConfiguration(new TicketMap());
+
     }
 }

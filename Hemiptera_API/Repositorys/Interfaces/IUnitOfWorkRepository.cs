@@ -6,6 +6,7 @@ public interface IUnitOfWorkRepository : IDisposable
 {
     IProjectRepository Project { get; }
     IRefreshTokenRepository RefreshToken { get; }
+    ITicketsRepository Ticket { get; }
 
     void Save();
 }

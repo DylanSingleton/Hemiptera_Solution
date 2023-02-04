@@ -104,6 +104,52 @@ namespace HemipteraAPI.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
+            modelBuilder.Entity("Hemiptera_API.Models.Ticket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AssignedToId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ReporterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Summary")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedToId")
+                        .IsUnique();
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("ReporterId")
+                        .IsUnique();
+
+                    b.ToTable("Tickets");
+                });
+
             modelBuilder.Entity("Hemiptera_API.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -295,6 +341,33 @@ namespace HemipteraAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Hemiptera_API.Models.Ticket", b =>
+                {
+                    b.HasOne("Hemiptera_API.Models.User", "AssignedTo")
+                        .WithOne()
+                        .HasForeignKey("Hemiptera_API.Models.Ticket", "AssignedToId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Hemiptera_API.Models.Project", "Project")
+                        .WithMany("Tickets")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Hemiptera_API.Models.User", "Reporter")
+                        .WithOne()
+                        .HasForeignKey("Hemiptera_API.Models.Ticket", "ReporterId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AssignedTo");
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Reporter");
+                });
+
             modelBuilder.Entity("Hemiptera_API.Models.User", b =>
                 {
                     b.HasOne("Hemiptera_API.Models.RefreshToken", "RefreshToken")
@@ -376,6 +449,8 @@ namespace HemipteraAPI.Migrations
 
             modelBuilder.Entity("Hemiptera_API.Models.Project", b =>
                 {
+                    b.Navigation("Tickets");
+
                     b.Navigation("UsersProjects");
                 });
 

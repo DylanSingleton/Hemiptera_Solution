@@ -13,6 +13,7 @@ public static class DependencyInjectionService
         services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddTransient<IUnitOfWorkRepository, UnitOfWorkRepository>();
         services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
+        services.AddTransient<ITicketsRepository, TicketsRepository>();
         services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
     }
 }

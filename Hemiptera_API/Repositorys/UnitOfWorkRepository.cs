@@ -9,15 +9,18 @@ public class UnitOfWorkRepository : IUnitOfWorkRepository
     private readonly ApplicationDbContext _context;
     public IProjectRepository Project { get; }
     public IRefreshTokenRepository RefreshToken { get; }
+    public  ITicketsRepository Ticket { get; }
 
     public UnitOfWorkRepository(
         ApplicationDbContext context,
         IProjectRepository projectRepository,
-        IRefreshTokenRepository refreshTokenRepository)
+        IRefreshTokenRepository refreshTokenRepository,
+        ITicketsRepository ticketsRepository)
     {
         _context = context;
         Project = projectRepository;
         RefreshToken = refreshTokenRepository;
+        Ticket = ticketsRepository;
     }
 
     private bool _disposed;
