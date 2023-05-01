@@ -1,7 +1,6 @@
 ﻿using Hemiptera_API.Repositorys.Interfaces;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 using Hemiptera_Contracts.Authentications.Responses;
+using System.Security.Claims;
 
 namespace Hemiptera_API.Helpers
 {

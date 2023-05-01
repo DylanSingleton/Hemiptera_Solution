@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Hemiptera_API.Results
+﻿namespace Hemiptera_API.Results
 {
     public class ValidatorResult : Result
     {

@@ -7,29 +7,33 @@ public class TicketMap : IEntityTypeConfiguration<Ticket>
 {
     public void Configure(EntityTypeBuilder<Ticket> entityTypeBuilder)
     {
-        entityTypeBuilder.HasKey(x => x.Id);
+        // Use fluent API to configure how EF Core maps the Ticket class to the database.
+        entityTypeBuilder.HasKey(t => t.Id);
         entityTypeBuilder.Property(x => x.Title).IsRequired();
         entityTypeBuilder.Property(x => x.Summary).IsRequired();
         entityTypeBuilder.Property(x => x.Description).IsRequired();
         entityTypeBuilder.Property(x => x.Priority).IsRequired();
         entityTypeBuilder.Property(x => x.Status).IsRequired();
-            
-        entityTypeBuilder.HasOne(x => x.Reporter)
-            .WithOne()
-            .HasForeignKey<Ticket>(x => x.ReporterId)
-            .OnDelete(DeleteBehavior.NoAction)
+
+        entityTypeBuilder
+            .HasOne(t => t.Reporter)
+            .WithMany()
+            .HasForeignKey(t => t.ReporterId)
+            .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
 
-        entityTypeBuilder.HasOne(x => x.AssignedTo)
-            .WithOne()
-            .HasForeignKey<Ticket>(x => x.AssignedToId)
-            .OnDelete(DeleteBehavior.NoAction)
+        entityTypeBuilder
+            .HasOne(t => t.AssignedTo)
+            .WithMany()
+            .HasForeignKey(x => x.AssignedToId)
+            .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
 
-        entityTypeBuilder.HasOne(x => x.Project)
-            .WithMany(x => x.Tickets)
-            .HasForeignKey(x => x.ProjectId)
-            .OnDelete(DeleteBehavior.NoAction)
+        entityTypeBuilder
+            .HasOne(t => t.Project)
+            .WithMany(t => t.Tickets)
+            .HasForeignKey(t => t.ProjectId)
+            .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
     }
 }

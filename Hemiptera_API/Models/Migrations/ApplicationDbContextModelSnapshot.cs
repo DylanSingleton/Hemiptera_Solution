@@ -139,13 +139,11 @@ namespace HemipteraAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssignedToId")
-                        .IsUnique();
+                    b.HasIndex("AssignedToId");
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("ReporterId")
-                        .IsUnique();
+                    b.HasIndex("ReporterId");
 
                     b.ToTable("Tickets");
                 });
@@ -344,21 +342,21 @@ namespace HemipteraAPI.Migrations
             modelBuilder.Entity("Hemiptera_API.Models.Ticket", b =>
                 {
                     b.HasOne("Hemiptera_API.Models.User", "AssignedTo")
-                        .WithOne()
-                        .HasForeignKey("Hemiptera_API.Models.Ticket", "AssignedToId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .WithMany()
+                        .HasForeignKey("AssignedToId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Hemiptera_API.Models.Project", "Project")
                         .WithMany("Tickets")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Hemiptera_API.Models.User", "Reporter")
-                        .WithOne()
-                        .HasForeignKey("Hemiptera_API.Models.Ticket", "ReporterId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .WithMany()
+                        .HasForeignKey("ReporterId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("AssignedTo");

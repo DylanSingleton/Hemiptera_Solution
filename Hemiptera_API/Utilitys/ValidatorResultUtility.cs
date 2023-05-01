@@ -12,20 +12,20 @@ namespace Hemiptera_API.Utilitys
             {
                 return new ValidatorResult();
             }
-            
+
             var validationErrors = new Dictionary<string, List<string>>();
-                foreach (var error in validationResult.Errors)
+            foreach (var error in validationResult.Errors)
+            {
+                if (validationErrors.ContainsKey(error.ErrorCode))
                 {
-                    if (validationErrors.ContainsKey(error.ErrorCode))
-                    {
-                        validationErrors[error.ErrorCode].Add(error.ErrorMessage);
-                    }
-                    else
-                    {
-                        validationErrors.Add(error.ErrorCode, new List<string> { error.ErrorMessage });
-                    }
+                    validationErrors[error.ErrorCode].Add(error.ErrorMessage);
                 }
-                return new ValidatorResult("Errors", validationErrors);
+                else
+                {
+                    validationErrors.Add(error.ErrorCode, new List<string> { error.ErrorMessage });
+                }
             }
+            return new ValidatorResult("Errors", validationErrors);
         }
     }
+}

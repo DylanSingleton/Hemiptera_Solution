@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Hemiptera_API.Models.Enums;
+﻿namespace Hemiptera_API.Models.Enums;
 
 public enum ProjectStatus
 {

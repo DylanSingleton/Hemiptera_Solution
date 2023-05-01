@@ -21,7 +21,7 @@ namespace Hemiptera_API.Controllers
             var revokeResult = _refreshTokenRepository.RevokeUserRefreshToken(userId);
             return !revokeResult.IsSuccessful ? HandleErrorResult(revokeResult) : Unauthorized();
         }
-        
+
         [HttpPost("Refresh")]
         public IActionResult RefreshToken()
         {
